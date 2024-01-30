@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Player.Systems.Enums
+﻿namespace Player.Systems.Enums
 {
     public enum JumpDirection : byte
     {

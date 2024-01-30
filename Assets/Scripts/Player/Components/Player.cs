@@ -1,6 +1,6 @@
 ﻿using Unity.Entities;
 
-namespace Assets.Scripts.Player.Components
+namespace Player.Components
 {
     public struct Player : IComponentData
     {

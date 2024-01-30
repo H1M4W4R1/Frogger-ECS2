@@ -1,35 +1,38 @@
-﻿using UnityEngine;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Transforms;
+using UnityEngine;
 
-public class FollowDOTSCameraTarget : MonoBehaviour
+namespace LowLevel
 {
-    private EntityManager _entityManager;
-    private EntityQuery _cameraTargetTagQuery;
-    private Transform _transform = null;
-
-    private void Awake()
+    public class FollowDOTSCameraTarget : MonoBehaviour
     {
-        _transform = GetComponent<Transform>();
+        private EntityManager _entityManager;
+        private EntityQuery _cameraTargetTagQuery;
+        private Transform _transform = null;
 
-        _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        _cameraTargetTagQuery = _entityManager.CreateEntityQuery(new EntityQueryDesc
+        private void Awake()
         {
-            All = new ComponentType[]
+            _transform = GetComponent<Transform>();
+
+            _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            _cameraTargetTagQuery = _entityManager.CreateEntityQuery(new EntityQueryDesc
+            {
+                All = new ComponentType[]
                 {
-                typeof(Assets.Scripts.Player.Components.Player)
+                    typeof(Player.Components.Player)
                 }
-        });
-    }
+            });
+        }
 
-    void LateUpdate()
-    {
-        Entity cameraTargetEntity = _cameraTargetTagQuery.GetSingletonEntity();
-
-        if (_entityManager.HasComponent<LocalToWorld>(cameraTargetEntity))
+        void LateUpdate()
         {
-            LocalToWorld cameraLocalToWorld = _entityManager.GetComponentData<LocalToWorld>(cameraTargetEntity);
-            _transform.position = cameraLocalToWorld.Position;
+            Entity cameraTargetEntity = _cameraTargetTagQuery.GetSingletonEntity();
+
+            if (_entityManager.HasComponent<LocalToWorld>(cameraTargetEntity))
+            {
+                LocalToWorld cameraLocalToWorld = _entityManager.GetComponentData<LocalToWorld>(cameraTargetEntity);
+                _transform.position = cameraLocalToWorld.Position;
+            }
         }
     }
 }

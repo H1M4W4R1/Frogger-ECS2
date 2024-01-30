@@ -1,28 +1,32 @@
+using Player.Components;
 using Unity.Entities;
 using UnityEngine;
 
-public class PlayerMovementAuthoring : MonoBehaviour
+namespace Player.Authorings
 {
-    // Jumping - player position change
-    public float jumpDistance;
-    public float jumpHeight;
-    public float jumpSpeed;
-
-    // If true then player character will rotate after jumping (if jumped left player will rotate left etc.)
-    public bool rotatePlayerCharacter;
-
-    private class Baker : Baker<PlayerMovementAuthoring>
+    public class PlayerMovementAuthoring : MonoBehaviour
     {
-        public override void Bake(PlayerMovementAuthoring authoring)
+        // Jumping - player position change
+        public float jumpDistance;
+        public float jumpHeight;
+        public float jumpSpeed;
+
+        // If true then player character will rotate after jumping (if jumped left player will rotate left etc.)
+        public bool rotatePlayerCharacter;
+
+        private class Baker : Baker<PlayerMovementAuthoring>
         {
-            var e = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(e, new PlayerMovement
+            public override void Bake(PlayerMovementAuthoring authoring)
             {
-                jumpDistance = authoring.jumpDistance,
-                jumpHeight = authoring.jumpHeight,
-                jumpSpeed = authoring.jumpSpeed,
-                rotatePlayerCharacter = authoring.rotatePlayerCharacter
-            });
+                var e = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(e, new PlayerMovement
+                {
+                    jumpDistance = authoring.jumpDistance,
+                    jumpHeight = authoring.jumpHeight,
+                    jumpSpeed = authoring.jumpSpeed,
+                    rotatePlayerCharacter = authoring.rotatePlayerCharacter
+                });
+            }
         }
     }
 }

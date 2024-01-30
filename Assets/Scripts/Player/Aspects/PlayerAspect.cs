@@ -1,8 +1,8 @@
-﻿using Assets.Scripts.Player.Components;
+﻿using Player.Components;
 using Unity.Entities;
 using Unity.Transforms;
 
-namespace Assets.Scripts.Player.Aspects
+namespace Player.Aspects
 {
     public readonly partial struct PlayerAspect : IAspect
     {

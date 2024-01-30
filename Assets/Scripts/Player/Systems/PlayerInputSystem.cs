@@ -1,10 +1,10 @@
-﻿using Assets.Scripts.Player.Components;
+﻿using Player.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Assets.Scripts.Player.Systems
+namespace Player.Systems
 {
     public partial struct PlayerInputSystem : ISystem
     {

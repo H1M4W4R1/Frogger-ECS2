@@ -1,7 +1,7 @@
 ﻿using Unity.Entities;
 using UnityEngine;
 
-namespace Assets.Scripts.Player.Authorings
+namespace Player.Authorings
 {
     public class PlayerAuthoring : MonoBehaviour
     {

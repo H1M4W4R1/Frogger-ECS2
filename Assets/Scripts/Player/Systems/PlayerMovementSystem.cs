@@ -1,127 +1,131 @@
-using Assets.Scripts.Player.Aspects;
-using Assets.Scripts.Player.Systems.Enums;
+using Player.Aspects;
+using Player.Components;
+using Player.Systems.Enums;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 
-public partial struct PlayerMovementSystem : ISystem
+namespace Player.Systems
 {
-    // Rotations (radians)
-    private const float LEFT_ROATION = -1.57079633f;
-    private const float RIGHT_ROTATION = 1.57079633f;
-    private const float UP_ROTATION = 0;
-    private const float DOWN_ROTATION = 3.14159265f;
-
-
-    private const float AXIS_DEADZONE = 0.2f;
-    private bool _isMoving;
-    private float _jumpTimer;
-    private float _jumpTotalTime;
-    private float3 _jumpVector;
-    private float3 _startingPosition;
-
-    public void OnCreate(ref SystemState state)
+    public partial struct PlayerMovementSystem : ISystem
     {
-        state.RequireForUpdate<PlayerMovement>();
-    }
+        // Rotations (radians)
+        private const float LEFT_ROATION = -1.57079633f;
+        private const float RIGHT_ROTATION = 1.57079633f;
+        private const float UP_ROTATION = 0;
+        private const float DOWN_ROTATION = 3.14159265f;
 
-    [BurstCompile]
-    public void OnUpdate(ref SystemState state)
-    {
-        foreach(PlayerAspect aspect in SystemAPI.Query<PlayerAspect>())
+
+        private const float AXIS_DEADZONE = 0.2f;
+        private bool _isMoving;
+        private float _jumpTimer;
+        private float _jumpTotalTime;
+        private float3 _jumpVector;
+        private float3 _startingPosition;
+
+        public void OnCreate(ref SystemState state)
         {
-            // Decode aspect information
-            var movementRO = aspect.movement.ValueRO;
-            var localTransform = aspect.localTransform;
-            var input = aspect.input;
-            var movement = aspect.movement;
+            state.RequireForUpdate<PlayerMovement>();
+        }
 
-            if (!_isMoving)
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
+        {
+            foreach(PlayerAspect aspect in SystemAPI.Query<PlayerAspect>())
             {
-                // Initalize jump vector
-                _jumpVector.x = _jumpVector.y = _jumpVector.z = 0;
+                // Decode aspect information
+                var movementRO = aspect.movement.ValueRO;
+                var localTransform = aspect.localTransform;
+                var input = aspect.input;
+                var movement = aspect.movement;
 
-                // Compute starting position for further usage
-                _startingPosition = localTransform.ValueRO.Position;
-                JumpDirection jumpDirection;
+                if (!_isMoving)
+                {
+                    // Initalize jump vector
+                    _jumpVector.x = _jumpVector.y = _jumpVector.z = 0;
 
-                // Horizontal jumps
-                if (input.ValueRO.axisInput.x < -AXIS_DEADZONE)
-                {
-                    _jumpVector.x -= movementRO.jumpDistance;
-                    jumpDirection = JumpDirection.Left;
-                }
-                else if (input.ValueRO.axisInput.x > AXIS_DEADZONE)
-                {
-                    _jumpVector.x += movementRO.jumpDistance;
-                    jumpDirection = JumpDirection.Right;
-                }
-                // Vertical jumps
-                else if (input.ValueRO.axisInput.y < -AXIS_DEADZONE)
-                {
-                    _jumpVector.z -= movementRO.jumpDistance;
-                    jumpDirection = JumpDirection.Down;
-                }
-                else if (input.ValueRO.axisInput.y > AXIS_DEADZONE)
-                {
-                    _jumpVector.z += movementRO.jumpDistance;
-                    jumpDirection = JumpDirection.Up;
-                }
-                else
-                    return;
+                    // Compute starting position for further usage
+                    _startingPosition = localTransform.ValueRO.Position;
+                    JumpDirection jumpDirection;
 
-                _isMoving = true;
-                _jumpTimer = _jumpTotalTime = movementRO.jumpDistance / movementRO.jumpSpeed;
-
-                // Handle player rotation during jump (rotation is -90, 90, 0 and 180deg in radians)
-                if (movementRO.rotatePlayerCharacter)
-                {
-                    switch (jumpDirection)
+                    // Horizontal jumps
+                    if (input.ValueRO.axisInput.x < -AXIS_DEADZONE)
                     {
-                        case JumpDirection.Left:
-                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, LEFT_ROATION, 0));
-                            break;
-                        case JumpDirection.Right:
-                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, RIGHT_ROTATION, 0));
-                            break;
-                        case JumpDirection.Up:
-                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, UP_ROTATION, 0));
-                            break;
-                        case JumpDirection.Down:
-                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, DOWN_ROTATION, 0));
-                            break;
+                        _jumpVector.x -= movementRO.jumpDistance;
+                        jumpDirection = JumpDirection.Left;
+                    }
+                    else if (input.ValueRO.axisInput.x > AXIS_DEADZONE)
+                    {
+                        _jumpVector.x += movementRO.jumpDistance;
+                        jumpDirection = JumpDirection.Right;
+                    }
+                    // Vertical jumps
+                    else if (input.ValueRO.axisInput.y < -AXIS_DEADZONE)
+                    {
+                        _jumpVector.z -= movementRO.jumpDistance;
+                        jumpDirection = JumpDirection.Down;
+                    }
+                    else if (input.ValueRO.axisInput.y > AXIS_DEADZONE)
+                    {
+                        _jumpVector.z += movementRO.jumpDistance;
+                        jumpDirection = JumpDirection.Up;
+                    }
+                    else
+                        return;
+
+                    _isMoving = true;
+                    _jumpTimer = _jumpTotalTime = movementRO.jumpDistance / movementRO.jumpSpeed;
+
+                    // Handle player rotation during jump (rotation is -90, 90, 0 and 180deg in radians)
+                    if (movementRO.rotatePlayerCharacter)
+                    {
+                        switch (jumpDirection)
+                        {
+                            case JumpDirection.Left:
+                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, LEFT_ROATION, 0));
+                                break;
+                            case JumpDirection.Right:
+                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, RIGHT_ROTATION, 0));
+                                break;
+                            case JumpDirection.Up:
+                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, UP_ROTATION, 0));
+                                break;
+                            case JumpDirection.Down:
+                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, DOWN_ROTATION, 0));
+                                break;
+                        }
                     }
                 }
-            }
-            else
-            {
-                // Animate jump
-                var dt = SystemAPI.Time.DeltaTime;
-                var xPercentage = (1f - _jumpTimer / _jumpTotalTime);
-
-                // X position (percentage of completion multiplied by jump vector)
-                var posDelta = xPercentage * _jumpVector;
-
-                // Y position Y = -(2X-1)^2 - 1, where X is normalized in [0, 1] range
-                var quadrant = (2 * xPercentage - 1);
-                var yPosition = -(quadrant * quadrant) + 1 * movement.ValueRO.jumpHeight;
-                posDelta.y = yPosition > 0 ? yPosition : 0; // Cannot exceed 0f (ground level)
-
-                _jumpTimer -= dt;
-
-                localTransform.ValueRW.Position = _startingPosition + posDelta;
-
-                if (_jumpTimer <= 0f)
+                else
                 {
-                    // BUGHUNTER: when timer lags under 0f position will be terribly calculated, fix that using precalculated target position
-                    localTransform.ValueRW.Position = _startingPosition + _jumpVector;
+                    // Animate jump
+                    var dt = SystemAPI.Time.DeltaTime;
+                    var xPercentage = (1f - _jumpTimer / _jumpTotalTime);
 
-                   _isMoving = false;
+                    // X position (percentage of completion multiplied by jump vector)
+                    var posDelta = xPercentage * _jumpVector;
+
+                    // Y position Y = -(2X-1)^2 - 1, where X is normalized in [0, 1] range
+                    var quadrant = (2 * xPercentage - 1);
+                    var yPosition = -(quadrant * quadrant) + 1 * movement.ValueRO.jumpHeight;
+                    posDelta.y = yPosition > 0 ? yPosition : 0; // Cannot exceed 0f (ground level)
+
+                    _jumpTimer -= dt;
+
+                    localTransform.ValueRW.Position = _startingPosition + posDelta;
+
+                    if (_jumpTimer <= 0f)
+                    {
+                        // BUGHUNTER: when timer lags under 0f position will be terribly calculated, fix that using precalculated target position
+                        localTransform.ValueRW.Position = _startingPosition + _jumpVector;
+
+                        _isMoving = false;
+                    }
                 }
-            }
 
-        }      
+            }      
+        }
+
+
     }
-
-
 }

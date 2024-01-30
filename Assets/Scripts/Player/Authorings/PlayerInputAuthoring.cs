@@ -1,8 +1,8 @@
-﻿using Assets.Scripts.Player.Components;
+﻿using Player.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Assets.Scripts.Player.Authorings
+namespace Player.Authorings
 {
     public class PlayerInputAuthoring : MonoBehaviour
     {
