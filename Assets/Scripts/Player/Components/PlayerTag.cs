@@ -2,7 +2,7 @@
 
 namespace Player.Components
 {
-    public struct Player : IComponentData
+    public struct PlayerTag : IComponentData
     {
     }
 }

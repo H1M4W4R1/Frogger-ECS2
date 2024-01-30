@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Player.Components;
+using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace LowLevel
             {
                 All = new ComponentType[]
                 {
-                    typeof(Player.Components.Player)
+                    typeof(PlayerTag)
                 }
             });
         }

@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Player.Components;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Player.Authorings
@@ -11,7 +12,7 @@ namespace Player.Authorings
             public override void Bake(PlayerAuthoring authoring)
             {
                 var e = GetEntity(TransformUsageFlags.None);
-                AddComponent(e, new Components.Player());
+                AddComponent(e, new PlayerTag());
             }
         }
 

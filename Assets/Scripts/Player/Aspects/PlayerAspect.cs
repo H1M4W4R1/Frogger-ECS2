@@ -6,7 +6,7 @@ namespace Player.Aspects
 {
     public readonly partial struct PlayerAspect : IAspect
     {
-        public readonly RefRO<Components.Player> playerTAG;
+        public readonly RefRO<PlayerTag> player;
         
         public readonly RefRW<LocalTransform> localTransform;
         public readonly RefRO<PlayerMovement> movement;
