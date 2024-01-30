@@ -17,14 +17,14 @@ namespace Assets.Scripts.Player.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state) 
         {
-            foreach(RefRW<PlayerInput> inputSystem in
-                SystemAPI.Query<RefRW<PlayerInput>>()) 
+            foreach (RefRW<PlayerInput> inputSystem in SystemAPI.Query<RefRW<PlayerInput>>())
             {
                 var xAxis = Input.GetAxis("Horizontal");
                 var yAxis = Input.GetAxis("Vertical");
 
-                inputSystem.ValueRW.axisInput = new float2(xAxis, yAxis);              
-            } 
+                inputSystem.ValueRW.axisInput = new float2(xAxis, yAxis);
+            }
+            
         }
     }
 }

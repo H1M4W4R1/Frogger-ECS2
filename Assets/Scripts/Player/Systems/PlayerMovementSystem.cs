@@ -1,12 +1,18 @@
-using Assets.Scripts.Player.Components;
+using Assets.Scripts.Player.Aspects;
 using Assets.Scripts.Player.Systems.Enums;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 
 public partial struct PlayerMovementSystem : ISystem
 {
+    // Rotations (radians)
+    private const float LEFT_ROATION = -1.57079633f;
+    private const float RIGHT_ROTATION = 1.57079633f;
+    private const float UP_ROTATION = 0;
+    private const float DOWN_ROTATION = 3.14159265f;
+
+
     private const float AXIS_DEADZONE = 0.2f;
     private bool _isMoving;
     private float _jumpTimer;
@@ -17,16 +23,18 @@ public partial struct PlayerMovementSystem : ISystem
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<PlayerMovement>();
-        state.RequireForUpdate<PlayerInput>();
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        foreach((RefRW<LocalTransform> localTransform, RefRO<PlayerMovement> movement, RefRO<PlayerInput> input) in
-            SystemAPI.Query<RefRW<LocalTransform>, RefRO<PlayerMovement>, RefRO<PlayerInput>>())
+        foreach(PlayerAspect aspect in SystemAPI.Query<PlayerAspect>())
         {
-            var movementRO = movement.ValueRO;
+            // Decode aspect information
+            var movementRO = aspect.movement.ValueRO;
+            var localTransform = aspect.localTransform;
+            var input = aspect.input;
+            var movement = aspect.movement;
 
             if (!_isMoving)
             {
@@ -65,22 +73,22 @@ public partial struct PlayerMovementSystem : ISystem
                 _isMoving = true;
                 _jumpTimer = _jumpTotalTime = movementRO.jumpDistance / movementRO.jumpSpeed;
 
-                // Handle player rotation during jump
+                // Handle player rotation during jump (rotation is -90, 90, 0 and 180deg in radians)
                 if (movementRO.rotatePlayerCharacter)
                 {
                     switch (jumpDirection)
                     {
                         case JumpDirection.Left:
-                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, -1.57079633f, 0));
+                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, LEFT_ROATION, 0));
                             break;
                         case JumpDirection.Right:
-                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, 1.57079633f, 0));
+                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, RIGHT_ROTATION, 0));
                             break;
                         case JumpDirection.Up:
-                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, 0, 0));
+                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, UP_ROTATION, 0));
                             break;
                         case JumpDirection.Down:
-                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, 3.14159265f, 0));
+                            localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, DOWN_ROTATION, 0));
                             break;
                     }
                 }
