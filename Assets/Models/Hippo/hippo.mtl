@@ -1,0 +1,28 @@
+# Material file for hippo.obj
+
+newmtl tex592
+	Ns 0
+	d 1
+	illum 2
+	Kd 1.0 1.0 1.0
+	Ks 0.0 0.0 0.0
+	Ka 0.2 0.2 0.2
+	map_Kd 109.png
+
+newmtl tex979
+	Ns 0
+	d 1
+	illum 2
+	Kd 1.0 1.0 1.0
+	Ks 0.0 0.0 0.0
+	Ka 0.2 0.2 0.2
+	map_Kd 110.png
+
+newmtl color0
+	Ns 0
+	d 1
+	illum 2
+	Kd 0.396078 0.396078 0.396078
+	Ks 0.0 0.0 0.0
+	Ka 0.2 0.2 0.2
+

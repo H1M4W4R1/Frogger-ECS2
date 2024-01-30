@@ -1,0 +1,45 @@
+# Material file for squirrel.obj
+
+newmtl tex710
+	Ns 0
+	d 1
+	illum 2
+	Kd 1.0 1.0 1.0
+	Ks 0.0 0.0 0.0
+	Ka 0.2 0.2 0.2
+	map_Kd 24.png
+
+newmtl tex711
+	Ns 0
+	d 1
+	illum 2
+	Kd 1.0 1.0 1.0
+	Ks 0.0 0.0 0.0
+	Ka 0.2 0.2 0.2
+	map_Kd 23.png
+
+newmtl tex712
+	Ns 0
+	d 1
+	illum 2
+	Kd 1.0 1.0 1.0
+	Ks 0.0 0.0 0.0
+	Ka 0.2 0.2 0.2
+	map_Kd 60.png
+
+newmtl color0
+	Ns 0
+	d 1
+	illum 2
+	Kd 0.752941 0.247059 0.0
+	Ks 0.0 0.0 0.0
+	Ka 0.2 0.2 0.2
+
+newmtl color1
+	Ns 0
+	d 1
+	illum 2
+	Kd 0.105882 0.113725 0.113725
+	Ks 0.0 0.0 0.0
+	Ka 0.2 0.2 0.2
+

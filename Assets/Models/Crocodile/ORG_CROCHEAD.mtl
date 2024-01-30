@@ -1,0 +1,51 @@
+# Material file for ORG_CROCHEAD.obj
+
+newmtl color0.001
+	Ns 96
+	d 1
+	illum 2
+	Kd 0.305882 0.262745 0.05098
+	Ks 0.5 0.5 0.5
+	Ka 1.0 1.0 1.0
+
+newmtl color1.002
+	Ns 96
+	d 1
+	illum 2
+	Kd 0.996078 0.996078 0.996078
+	Ks 0.5 0.5 0.5
+	Ka 1.0 1.0 1.0
+
+newmtl color2
+	Ns 96
+	d 1
+	illum 2
+	Kd 0.211765 0.0 0.0
+	Ks 0.5 0.5 0.5
+	Ka 1.0 1.0 1.0
+
+newmtl color3
+	Ns 96
+	d 1
+	illum 2
+	Kd 0.564706 0.54902 0.45098
+	Ks 0.5 0.5 0.5
+	Ka 1.0 1.0 1.0
+
+newmtl color4
+	Ns 96
+	d 1
+	illum 2
+	Kd 0.796078 0.396078 0.411765
+	Ks 0.5 0.5 0.5
+	Ka 1.0 1.0 1.0
+
+newmtl crochead
+	Ns 0
+	d 1
+	illum 2
+	Kd 1.0 1.0 1.0
+	Ks 0.0 0.0 0.0
+	Ka 1.0 1.0 1.0
+	map_Kd crocodile.png
+
