@@ -10,6 +10,8 @@ public class FollowDOTSCameraTarget : MonoBehaviour
 
     private void Awake()
     {
+        _transform = GetComponent<Transform>();
+
         _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         _cameraTargetTagQuery = _entityManager.CreateEntityQuery(new EntityQueryDesc
         {
@@ -22,11 +24,6 @@ public class FollowDOTSCameraTarget : MonoBehaviour
 
     void LateUpdate()
     {
-        if (_transform == null)
-        {
-            _transform = GetComponent<Transform>();
-        }
-
         Entity cameraTargetEntity = _cameraTargetTagQuery.GetSingletonEntity();
 
         if (_entityManager.HasComponent<LocalToWorld>(cameraTargetEntity))
