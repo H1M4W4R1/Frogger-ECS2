@@ -7,6 +7,7 @@ namespace Levels.Authorings
     public class TileAuthoring : MonoBehaviour
     {
         public LevelTiles tileType;
+        public bool isKillTile;
         
         private class Baker : Baker<TileAuthoring>
         {
@@ -15,7 +16,8 @@ namespace Levels.Authorings
                 var e = GetEntity(TransformUsageFlags.None);
                 AddComponent(e, new Tile()
                 {
-                    tileType = (byte) authoring.tileType
+                    tileType = (byte) authoring.tileType,
+                    isKillTile = authoring.isKillTile
                 });
             }
         }

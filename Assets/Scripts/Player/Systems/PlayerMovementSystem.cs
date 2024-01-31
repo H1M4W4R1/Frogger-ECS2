@@ -48,20 +48,22 @@ namespace Player.Systems
 
                 if (!movementInfo.isAnimating)
                 {
-                    if(!movementInfo.isMoving)
+                    if (!movementInfo.isMoving)
+                    {
                         new CheckForJumpAttemptJob().Schedule();
+                    }
                     else
                     {
                         _jumpTimer = movementRO.jumpDistance / movementRO.jumpSpeed;
                         aspect.movementInformation.ValueRW.isAnimating = true;
-                        
+
+                        // Handle player rotation during jump
+                        new RotateFrogJob().Schedule();
+
                         // Play SFX
                         if (SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<SFXInfo> info))
                             info.Add(new SFXInfo() {sfxClip = UniqueAudioClip.JumpSFX});
                     }
-
-                    // Handle player rotation during jump
-                    new RotateFrogJob().Schedule();
                 }
                 else
                 {
