@@ -1,3 +1,4 @@
+using Audio.Components;
 using Levels.Components;
 using LowLevel;
 using Player.Aspects;
@@ -29,6 +30,8 @@ namespace Player.Systems
         {
             // Grab level width
             var onlySingleLevelFound = SystemAPI.TryGetSingleton(out LevelData levelData);
+            var sfxDataSingletonFound = 
+                SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<SFXData> sfxData);
             
             // Process movement
             foreach(PlayerAspect aspect in SystemAPI.Query<PlayerAspect>())
@@ -38,6 +41,7 @@ namespace Player.Systems
                 var input = aspect.input;
                 var movement = aspect.movement;
                 var movementRO = aspect.movement.ValueRO;
+                var jumpSFX = aspect.jumpSFX.ValueRO;
 
                 // Automatically update level information
                 if (onlySingleLevelFound)
@@ -83,6 +87,15 @@ namespace Player.Systems
                     _isMoving = true;
                     _jumpTimer = _jumpTotalTime = movementRO.jumpDistance / movementRO.jumpSpeed;
 
+                    // Register jump SFX
+                    if (sfxDataSingletonFound)
+                    {
+                        sfxData.Add(new SFXData()
+                        {
+                            sfxId = jumpSFX.sfxId
+                        });
+                    }
+
                     // Handle player rotation during jump (rotation is -90, 90, 0 and 180deg in radians)
                     if (movementRO.rotatePlayerCharacter)
                     {
@@ -102,6 +115,8 @@ namespace Player.Systems
                                 break;
                         }
                     }
+                    
+                    
                 }
                 else
                 {

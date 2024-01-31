@@ -11,6 +11,7 @@ namespace Audio.Managed
     [BurstCompile]
     public class Jukebox : MonoBehaviour
     {
+        #region SINGLETON
         private static Jukebox _instance;
 
         private static Jukebox Instance
@@ -23,10 +24,11 @@ namespace Audio.Managed
                 return _instance;
             }
         }
+        #endregion
 
         public float trackChangeTime = 10f;
         
-        public List<AudioClip> tracks = new List<AudioClip>();
+        private readonly List<AudioClip> _tracks = new List<AudioClip>();
         
         // Audio management
         private AudioSource _playerA;
@@ -61,8 +63,8 @@ namespace Audio.Managed
 
         public static int RegisterClip(AudioClip clip)
         {
-            Instance.tracks.Add(clip);
-            return Instance.tracks.Count - 1;
+            Instance._tracks.Add(clip);
+            return Instance._tracks.Count - 1;
         }
         
         private void _Play(int track)
@@ -72,7 +74,7 @@ namespace Audio.Managed
             // Play other track (Cross-fade tracks)
             if (_currentPlayer == _playerA)
             {
-                _playerB.clip = tracks[track];
+                _playerB.clip = _tracks[track];
                 _playerB.Play();
                 
                 _playerA.DOFade(0, trackChangeTime).OnComplete(() =>
@@ -85,7 +87,7 @@ namespace Audio.Managed
             }
             else
             {
-                _playerA.clip = tracks[track];
+                _playerA.clip = _tracks[track];
                 _playerA.Play();
                 
                 _playerA.DOFade(1, trackChangeTime);
