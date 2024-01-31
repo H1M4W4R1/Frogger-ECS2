@@ -13,8 +13,6 @@ namespace Player.Aspects
         public readonly RefRW<PlayerMovement> movement;
         public readonly RefRO<PlayerInput> input;
 
-        public readonly RefRO<SFXTrack> jumpSFX;
-
         // ref: PlayerMovementSystem
     }
 }

@@ -1,3 +1,4 @@
+using Audio.Authorings.SFX;
 using Audio.Components;
 using Levels.Components;
 using LowLevel;
@@ -34,14 +35,15 @@ namespace Player.Systems
                 SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<SFXData> sfxData);
             
             // Process movement
-            foreach(PlayerAspect aspect in SystemAPI.Query<PlayerAspect>())
+            foreach((PlayerAspect aspect, Entity e) in SystemAPI.Query<PlayerAspect>().WithEntityAccess())
             {
+                var sfxTracks = SystemAPI.GetBuffer<SFXTrack>(e);
+                
                 // Decode aspect information
                 var localTransform = aspect.localTransform;
                 var input = aspect.input;
                 var movement = aspect.movement;
                 var movementRO = aspect.movement.ValueRO;
-                var jumpSFX = aspect.jumpSFX.ValueRO;
 
                 // Automatically update level information
                 if (onlySingleLevelFound)
@@ -87,12 +89,14 @@ namespace Player.Systems
                     _isMoving = true;
                     _jumpTimer = _jumpTotalTime = movementRO.jumpDistance / movementRO.jumpSpeed;
 
+                    
+                    
                     // Register jump SFX
                     if (sfxDataSingletonFound)
                     {
                         sfxData.Add(new SFXData()
                         {
-                            sfxId = jumpSFX.sfxId
+                            sfxId = sfxTracks[PlayerSFX.JUMP].sfxId
                         });
                     }
 

@@ -28,7 +28,7 @@ namespace Audio.Managed
                 return _instance;
             }
         }
-        #endregion
+        #endregion 
 
         [SerializeField] [ReadOnly] private readonly List<AudioClip> _sfxClips = new List<AudioClip>();
         private readonly List<AudioSource> _sources = new List<AudioSource>();
@@ -56,6 +56,9 @@ namespace Audio.Managed
 
         public static int AddSFX(AudioClip clip)
         {
+            Instance._sfxClips.RemoveAll(q => !q);
+            if (Instance._sfxClips.Contains(clip)) return Instance._sfxClips.IndexOf(clip);            
+            
             Instance._sfxClips.Add(clip);
             return Instance._sfxClips.Count - 1;
         }

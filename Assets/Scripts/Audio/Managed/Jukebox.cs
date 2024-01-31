@@ -5,6 +5,7 @@ using DG.Tweening;
 using Unity.Burst;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Audio.Managed
 {
@@ -28,7 +29,7 @@ namespace Audio.Managed
 
         public float trackChangeTime = 10f;
         
-        private readonly List<AudioClip> _tracks = new List<AudioClip>();
+        public readonly List<AudioClip> _tracks = new List<AudioClip>();
         
         // Audio management
         private AudioSource _playerA;
@@ -38,7 +39,7 @@ namespace Audio.Managed
         private EntityManager _entityManager;
         private EntityQuery _entityQuery;
         
-        private int _currentTrack;
+        private int _currentTrack = -100;
         
         private void Awake()
         {
@@ -63,6 +64,9 @@ namespace Audio.Managed
 
         public static int RegisterClip(AudioClip clip)
         {
+            Instance._tracks.RemoveAll(q => !q);
+            if (Instance._tracks.Contains(clip)) return Instance._tracks.IndexOf(clip);           
+           
             Instance._tracks.Add(clip);
             return Instance._tracks.Count - 1;
         }
@@ -70,6 +74,7 @@ namespace Audio.Managed
         private void _Play(int track)
         {
             if (track == -1) return;
+            Debug.Log($"Playing {track}");
             
             // Play other track (Cross-fade tracks)
             if (_currentPlayer == _playerA)
