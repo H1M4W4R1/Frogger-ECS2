@@ -2,7 +2,7 @@
 using Levels.Components;
 using Unity.Collections;
 
-namespace Levels.Data
+namespace Levels.Data 
 {
     [Serializable]
     public struct LevelLane
