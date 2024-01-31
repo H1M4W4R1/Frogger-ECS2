@@ -151,6 +151,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeUntilFailed: 0
   threatSpeedMultiplier: 0
+  halfPlayableWidth: 3
+  halfRenderedWidth: 16
 --- !u!114 &2074657054
 MonoBehaviour:
   m_ObjectHideFlags: 0

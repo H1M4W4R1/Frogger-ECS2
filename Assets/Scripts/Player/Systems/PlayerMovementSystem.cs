@@ -1,3 +1,4 @@
+using Levels.Components;
 using LowLevel;
 using Player.Aspects;
 using Player.Components;
@@ -25,13 +26,22 @@ namespace Player.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            // Grab level width
+            var levelData = default(LevelData);
+            var onlySingleLevelFound = SystemAPI.TryGetSingleton(out levelData);
+            
+            // Process movement
             foreach(PlayerAspect aspect in SystemAPI.Query<PlayerAspect>())
             {
                 // Decode aspect information
-                var movementRO = aspect.movement.ValueRO;
                 var localTransform = aspect.localTransform;
                 var input = aspect.input;
                 var movement = aspect.movement;
+                var movementRO = aspect.movement.ValueRO;
+
+                // Automatically update level information
+                if (onlySingleLevelFound)
+                    movement.ValueRW.maxTilesToSide = levelData.levelHalfPlayableWidth;
 
                 if (!_isMoving)
                 {

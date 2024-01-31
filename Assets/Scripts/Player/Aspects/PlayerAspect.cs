@@ -9,7 +9,7 @@ namespace Player.Aspects
         public readonly RefRO<PlayerTag> player;
         
         public readonly RefRW<LocalTransform> localTransform;
-        public readonly RefRO<PlayerMovement> movement;
+        public readonly RefRW<PlayerMovement> movement;
         public readonly RefRO<PlayerInput> input;
 
         // ref: PlayerMovementSystem
