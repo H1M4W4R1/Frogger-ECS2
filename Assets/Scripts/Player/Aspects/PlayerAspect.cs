@@ -1,5 +1,4 @@
-﻿using Audio.Components;
-using Player.Components;
+﻿using Player.Components;
 using Unity.Entities;
 using Unity.Transforms;
 

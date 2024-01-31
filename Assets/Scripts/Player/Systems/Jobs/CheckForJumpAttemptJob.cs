@@ -4,7 +4,6 @@ using Player.Systems.Enums;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace Player.Systems.Jobs
 {

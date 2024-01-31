@@ -1,5 +1,4 @@
-﻿using Audio.Managed;
-using Levels.Components;
+﻿using Levels.Components;
 using UnityEngine;
 using Unity.Entities;
 
@@ -8,7 +7,6 @@ namespace Levels.Authorings
     public class LevelAuthoring : MonoBehaviour
     {
         public bool procedurallyGeneratedLevel = true;
-        public AudioClip levelAudioTrack;
         
         private class Baker : Baker<LevelAuthoring>
         {
@@ -17,15 +15,11 @@ namespace Levels.Authorings
                 var e = GetEntity(TransformUsageFlags.None);
                 AddComponent(e, new LevelTag());
                 AddComponent(e, new LevelBuiltTag());
-
+                
                 SetComponentEnabled<LevelBuiltTag>(e, false);
 
-                AddComponent(e, new LevelAudioTrack()
-                {
-                    track = Jukebox.RegisterClip(authoring.levelAudioTrack)
-                });
-
                 AddBuffer<RenderedLevelTile>(e);
+                
                 
                 if (authoring.procedurallyGeneratedLevel)
                     AddComponent(e, new BuildableLevelTag());

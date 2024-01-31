@@ -1,5 +1,4 @@
 ﻿using System;
-using Levels.Components;
 using Unity.Collections;
 
 namespace Levels.Data 

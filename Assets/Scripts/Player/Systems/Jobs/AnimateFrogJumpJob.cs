@@ -1,9 +1,7 @@
 ﻿using Player.Components;
 using Unity.Burst;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace Player.Systems.Jobs
 {

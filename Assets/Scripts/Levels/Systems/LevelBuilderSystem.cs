@@ -1,5 +1,4 @@
-﻿using System;
-using Levels.Components;
+﻿using Levels.Components;
 using LowLevel;
 using Unity.Burst;
 using Unity.Collections;

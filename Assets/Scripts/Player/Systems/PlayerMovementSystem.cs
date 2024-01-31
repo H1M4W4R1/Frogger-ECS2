@@ -1,15 +1,12 @@
-using Audio.Authorings.SFX;
 using Audio.Components;
+using Audio.LowLevel;
+using Audio.Systems;
 using Levels.Components;
-using LowLevel;
 using Player.Aspects;
 using Player.Components;
-using Player.Systems.Enums;
 using Player.Systems.Jobs;
 using Unity.Burst;
 using Unity.Entities;
-using Unity.Jobs;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Player.Systems
@@ -24,6 +21,7 @@ namespace Player.Systems
             state.RequireForUpdate<PlayerTag>();
             state.RequireForUpdate<PlayerMovementSettings>();
             state.RequireForUpdate<CurrentMovementData>();
+            state.RequireForUpdate<SFXInfo>();
         }
 
         [BurstCompile]
@@ -31,7 +29,6 @@ namespace Player.Systems
         {
             // Grab level width
             var onlySingleLevelFound = SystemAPI.TryGetSingleton(out LevelData levelData);
-            var sfxData = SystemAPI.GetSingletonBuffer<SFXPlayerData>();
 
             // Process movement
             foreach((PlayerAspect aspect, Entity e) in SystemAPI.Query<PlayerAspect>().WithEntityAccess())
@@ -58,14 +55,11 @@ namespace Player.Systems
                     else
                     {
                         _jumpTimer = movementRO.jumpDistance / movementRO.jumpSpeed;
-                        var sfxTracks = SystemAPI.GetBuffer<SFXTrack>(e);
-
-                        sfxData.Add(new SFXPlayerData() 
-                        {
-                            sfxId = sfxTracks[PlayerSFX.JUMP].sfxId
-                        });
-                        
                         aspect.movementInformation.ValueRW.isAnimating = true;
+                        
+                        // Play SFX
+                        if (SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<SFXInfo> info))
+                            info.Add(new SFXInfo() {sfxClip = UniqueAudioClip.JumpSFX});
                     }
 
                     // Handle player rotation during jump
