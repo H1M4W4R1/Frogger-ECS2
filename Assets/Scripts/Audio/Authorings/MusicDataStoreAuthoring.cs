@@ -1,7 +1,6 @@
 ﻿using Audio.Components;
 using UnityEngine;
 using Unity.Entities;
-using Player.Components;
 
 namespace Audio.Authorings
 {
