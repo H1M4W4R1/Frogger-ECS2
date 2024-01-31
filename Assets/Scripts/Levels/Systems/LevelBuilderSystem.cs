@@ -35,6 +35,7 @@ namespace Levels.Systems
                 var levelData = loadedLevel.levelData.ValueRO;
                 var grassTile = lib[0].tile;
 
+                // TODO: Load JSON and job-build the level
                 for (var x = -levelData.levelHalfRenderedWidth * ConstConfig.TILE_SIZE;
                      x <= levelData.levelHalfRenderedWidth * ConstConfig.TILE_SIZE; 
                      x += ConstConfig.TILE_SIZE)
