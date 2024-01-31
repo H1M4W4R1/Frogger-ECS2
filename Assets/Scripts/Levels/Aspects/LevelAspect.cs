@@ -1,6 +1,7 @@
-﻿using Unity.Entities;
+﻿using Levels.Components;
+using Unity.Entities;
 
-namespace Levels.Components
+namespace Levels.Aspects
 {
     public readonly partial struct LevelAspect : IAspect
     {
