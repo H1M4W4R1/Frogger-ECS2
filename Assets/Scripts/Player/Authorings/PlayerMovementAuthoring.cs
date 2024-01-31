@@ -21,7 +21,7 @@ namespace Player.Authorings
             public override void Bake(PlayerMovementAuthoring authoring)
             {
                 var e = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(e, new PlayerMovement
+                AddComponent(e, new PlayerMovementSettings
                 {
                     jumpDistance = authoring.jumpDistance,
                     jumpHeight = authoring.jumpHeight,
@@ -29,6 +29,9 @@ namespace Player.Authorings
                     rotatePlayerCharacter = authoring.rotatePlayerCharacter,
                     maxTilesToSide = authoring.maxTilesToSize
                 });
+                AddComponent(e, new IsMoving());
+                AddComponent(e, new CurrentMovementData());
+                AddComponent(e, new IsMovementComputing());
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Levels.Components;
+﻿using System;
+using Levels.Components;
 using LowLevel;
 using Unity.Burst;
 using Unity.Collections;
@@ -19,13 +20,14 @@ namespace Levels.Systems
             state.RequireForUpdate<LevelBuiltTag>();
             state.RequireForUpdate<LevelData>();
             state.RequireForUpdate<TileLibrary>();
+            state.RequireForUpdate<RenderedLevelTile>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var lib = SystemAPI.GetSingletonBuffer<TileLibrary>();
-            var cmdBuffer = new EntityCommandBuffer(Allocator.Persistent);
+            var cmdBuffer = new EntityCommandBuffer(Allocator.Domain);
             
             foreach (var (loadedLevel, entity) in SystemAPI.Query<LevelAspect>()
                          .WithDisabled<LevelBuiltTag>()
@@ -34,6 +36,7 @@ namespace Levels.Systems
             {
                 var levelData = loadedLevel.levelData.ValueRO;
                 var grassTile = lib[0].tile;
+                var renderedData = SystemAPI.GetBuffer<RenderedLevelTile>(entity);
 
                 // TODO: Load JSON and job-build the level
                 for (var x = -levelData.levelHalfRenderedWidth * ConstConfig.TILE_SIZE;
@@ -48,6 +51,13 @@ namespace Levels.Systems
                             Position = new float3(x, 0, z),
                             Rotation = quaternion.EulerXYZ(90 * Mathf.Deg2Rad, 0, 0),
                             Scale = 2f
+                        });
+
+                        renderedData.Add(new RenderedLevelTile()
+                        {
+                            tileId = 0,
+                            xPosition = x,
+                            zPosition = z
                         });
                     }
                 }

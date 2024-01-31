@@ -11,6 +11,5 @@ namespace Levels.Aspects
         // Data
         // public readonly RefRW<LevelBuiltTag> isLevelBuilt; // Inside main request
         public readonly RefRO<LevelData> levelData;
-
     }
 }

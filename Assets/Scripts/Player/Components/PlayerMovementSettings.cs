@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace Player.Components
 {
-    public struct PlayerMovement : IComponentData
+    public struct PlayerMovementSettings : IComponentData
     {
         // Jumping - player position change
         public float jumpDistance;

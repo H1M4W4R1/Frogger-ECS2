@@ -74,7 +74,6 @@ namespace Audio.Managed
         private void _Play(int track)
         {
             if (track == -1) return;
-            Debug.Log($"Playing {track}");
             
             // Play other track (Cross-fade tracks)
             if (_currentPlayer == _playerA)

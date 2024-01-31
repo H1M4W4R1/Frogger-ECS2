@@ -49,7 +49,7 @@ namespace Audio.Managed
             {
                 All = new ComponentType[]
                 {
-                    typeof(SFXData)
+                    typeof(SFXPlayerData)
                 }
             });
         }
@@ -88,9 +88,9 @@ namespace Audio.Managed
             var targetEntity = _entityQuery.GetSingletonEntity();
 
             // Play all SFX ;)
-            if (_entityManager.HasBuffer<SFXData>(targetEntity))
+            if (_entityManager.HasBuffer<SFXPlayerData>(targetEntity))
             {
-                var data = _entityManager.GetBuffer<SFXData>(targetEntity);
+                var data = _entityManager.GetBuffer<SFXPlayerData>(targetEntity);
                 
                 foreach(var d in data)
                     Play(d.sfxId);

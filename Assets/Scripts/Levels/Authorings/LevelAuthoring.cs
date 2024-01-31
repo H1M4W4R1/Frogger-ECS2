@@ -24,6 +24,8 @@ namespace Levels.Authorings
                 {
                     track = Jukebox.RegisterClip(authoring.levelAudioTrack)
                 });
+
+                AddBuffer<RenderedLevelTile>(e);
                 
                 if (authoring.procedurallyGeneratedLevel)
                     AddComponent(e, new BuildableLevelTag());

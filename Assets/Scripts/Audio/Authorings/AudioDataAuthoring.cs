@@ -15,7 +15,7 @@ namespace Audio.Authorings
                 {
                     currentBackgroundTrack = -1
                 });
-                AddBuffer<SFXData>(e);
+                AddBuffer<SFXPlayerData>(e);
             }
         }
 

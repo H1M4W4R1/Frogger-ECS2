@@ -2,7 +2,7 @@
 
 namespace Audio.Components
 {
-    public struct SFXData : IBufferElementData
+    public struct SFXPlayerData : IBufferElementData
     {
         public int sfxId;
     }
