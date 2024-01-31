@@ -1,3 +1,4 @@
+using LowLevel;
 using Player.Aspects;
 using Player.Components;
 using Player.Systems.Enums;
@@ -9,14 +10,7 @@ namespace Player.Systems
 {
     public partial struct PlayerMovementSystem : ISystem
     {
-        // Rotations (radians)
-        private const float LEFT_ROATION = -1.57079633f;
-        private const float RIGHT_ROTATION = 1.57079633f;
-        private const float UP_ROTATION = 0;
-        private const float DOWN_ROTATION = 3.14159265f;
-
-
-        private const float AXIS_DEADZONE = 0.2f;
+       
         private bool _isMoving;
         private float _jumpTimer;
         private float _jumpTotalTime;
@@ -46,26 +40,29 @@ namespace Player.Systems
 
                     // Compute starting position for further usage
                     _startingPosition = localTransform.ValueRO.Position;
-                    JumpDirection jumpDirection;
+                    JumpDirection jumpDirection = JumpDirection.None;
 
                     // Horizontal jumps
-                    if (input.ValueRO.axisInput.x < -AXIS_DEADZONE)
+                    if (input.ValueRO.axisInput.x < -ConstConfig.AXIS_DEADZONE)
                     {
-                        _jumpVector.x -= movementRO.jumpDistance;
+                        if (_startingPosition.x > -movementRO.maxTilesToSide * ConstConfig.TILE_SIZE)
+                            _jumpVector.x -= movementRO.jumpDistance;
                         jumpDirection = JumpDirection.Left;
                     }
-                    else if (input.ValueRO.axisInput.x > AXIS_DEADZONE)
+                    else if (input.ValueRO.axisInput.x > ConstConfig.AXIS_DEADZONE)
                     {
-                        _jumpVector.x += movementRO.jumpDistance;
+                        if (_startingPosition.x < movementRO.maxTilesToSide * ConstConfig.TILE_SIZE)
+                            _jumpVector.x += movementRO.jumpDistance;
                         jumpDirection = JumpDirection.Right;
                     }
                     // Vertical jumps
-                    else if (input.ValueRO.axisInput.y < -AXIS_DEADZONE)
+                    else if (input.ValueRO.axisInput.y < -ConstConfig.AXIS_DEADZONE)
                     {
-                        _jumpVector.z -= movementRO.jumpDistance;
+                        if (_startingPosition.z > ConstConfig.BACKWARD_LIMIT)
+                            _jumpVector.z -= movementRO.jumpDistance;
                         jumpDirection = JumpDirection.Down;
                     }
-                    else if (input.ValueRO.axisInput.y > AXIS_DEADZONE)
+                    else if (input.ValueRO.axisInput.y > ConstConfig.AXIS_DEADZONE)
                     {
                         _jumpVector.z += movementRO.jumpDistance;
                         jumpDirection = JumpDirection.Up;
@@ -82,16 +79,16 @@ namespace Player.Systems
                         switch (jumpDirection)
                         {
                             case JumpDirection.Left:
-                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, LEFT_ROATION, 0));
+                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, ConstConfig.LEFT_ROTATION, 0));
                                 break;
                             case JumpDirection.Right:
-                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, RIGHT_ROTATION, 0));
+                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, ConstConfig.RIGHT_ROTATION, 0));
                                 break;
                             case JumpDirection.Up:
-                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, UP_ROTATION, 0));
+                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, ConstConfig.UP_ROTATION, 0));
                                 break;
                             case JumpDirection.Down:
-                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, DOWN_ROTATION, 0));
+                                localTransform.ValueRW.Rotation = quaternion.EulerXYZ(new float3(0, ConstConfig.DOWN_ROTATION, 0));
                                 break;
                         }
                     }

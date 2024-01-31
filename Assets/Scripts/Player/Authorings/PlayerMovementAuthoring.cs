@@ -11,6 +11,8 @@ namespace Player.Authorings
         public float jumpHeight;
         public float jumpSpeed;
 
+        public int maxTilesToSize = 3;
+        
         // If true then player character will rotate after jumping (if jumped left player will rotate left etc.)
         public bool rotatePlayerCharacter;
 
@@ -24,7 +26,8 @@ namespace Player.Authorings
                     jumpDistance = authoring.jumpDistance,
                     jumpHeight = authoring.jumpHeight,
                     jumpSpeed = authoring.jumpSpeed,
-                    rotatePlayerCharacter = authoring.rotatePlayerCharacter
+                    rotatePlayerCharacter = authoring.rotatePlayerCharacter,
+                    maxTilesToSide = authoring.maxTilesToSize
                 });
             }
         }

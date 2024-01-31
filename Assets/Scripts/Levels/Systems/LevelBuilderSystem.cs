@@ -1,4 +1,5 @@
 ﻿using Levels.Components;
+using LowLevel;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -11,8 +12,7 @@ namespace Levels.Systems
 {
     public partial struct LevelBuilderSystem : ISystem
     {
-        private const int N_HORIZONTAL_TILES_HALF = 16;
-        private const int TILE_SIZE = 2;
+
         
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -28,7 +28,6 @@ namespace Levels.Systems
         public void OnUpdate(ref SystemState state)
         {
             var lib = SystemAPI.GetSingletonBuffer<TileLibrary>();
-            
             var cmdBuffer = new EntityCommandBuffer(Allocator.Persistent);
             
             foreach (var (loadedLevel, entity) in SystemAPI.Query<LevelAspect>().WithDisabled<LevelBuiltTag>().WithEntityAccess())
@@ -36,10 +35,11 @@ namespace Levels.Systems
                 var levelData = loadedLevel.levelData.ValueRO;
                 var grassTile = lib[0].tile;
 
-                for (var x = -N_HORIZONTAL_TILES_HALF * TILE_SIZE; x <= N_HORIZONTAL_TILES_HALF * TILE_SIZE; 
-                     x += TILE_SIZE)
+                for (var x = -levelData.levelHalfRenderedWidth * ConstConfig.TILE_SIZE;
+                     x <= levelData.levelHalfRenderedWidth * ConstConfig.TILE_SIZE; 
+                     x += ConstConfig.TILE_SIZE)
                 {
-                    for(var z = 0; z <= 256; z += TILE_SIZE)
+                    for(var z = 0; z <= 256; z += ConstConfig.TILE_SIZE)
                     {
                         var spawnedObject = cmdBuffer.Instantiate(grassTile);
                         cmdBuffer.SetComponent(spawnedObject, new LocalTransform()
