@@ -16,13 +16,8 @@ namespace Player.Systems
 {
     public partial struct PlayerMovementSystem : ISystem
     {
-       
         private float _jumpTimer;
-        private float3 _jumpVector;
-        private float3 _startingPosition;
 
-        private JobHandle _currentJob;
-        
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
