@@ -9,6 +9,7 @@ namespace Player.Systems
     public partial struct PlayerInputSystem : ISystem
     {
 
+        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<PlayerInput>();

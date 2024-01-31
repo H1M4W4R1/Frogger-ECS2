@@ -18,6 +18,7 @@ namespace Player.Systems
         private float3 _jumpVector;
         private float3 _startingPosition;
 
+        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<PlayerMovement>();
@@ -27,8 +28,7 @@ namespace Player.Systems
         public void OnUpdate(ref SystemState state)
         {
             // Grab level width
-            var levelData = default(LevelData);
-            var onlySingleLevelFound = SystemAPI.TryGetSingleton(out levelData);
+            var onlySingleLevelFound = SystemAPI.TryGetSingleton(out LevelData levelData);
             
             // Process movement
             foreach(PlayerAspect aspect in SystemAPI.Query<PlayerAspect>())

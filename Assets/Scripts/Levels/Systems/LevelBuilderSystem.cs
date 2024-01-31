@@ -12,8 +12,6 @@ namespace Levels.Systems
 {
     public partial struct LevelBuilderSystem : ISystem
     {
-
-        
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -22,7 +20,6 @@ namespace Levels.Systems
             state.RequireForUpdate<LevelData>();
             state.RequireForUpdate<TileLibrary>();
         }
-
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)

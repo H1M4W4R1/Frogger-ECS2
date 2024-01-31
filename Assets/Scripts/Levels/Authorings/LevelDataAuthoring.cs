@@ -13,8 +13,6 @@ namespace Levels.Authorings
         
         private class Baker : Baker<LevelDataAuthoring>
         {
-       
-            
             public override void Bake(LevelDataAuthoring authoring)
             {
                 var e = GetEntity(TransformUsageFlags.None);
