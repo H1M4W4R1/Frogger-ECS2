@@ -1,13 +1,13 @@
-﻿using System;
-using Levels.Components;
+﻿using Levels.Components;
 using UnityEngine;
 using Unity.Entities;
-using Player.Components;
 
 namespace Levels.Authorings
 {
     public class LevelAuthoring : MonoBehaviour
     {
+        public bool procedurallyGeneratedLevel = true;
+        
         private class Baker : Baker<LevelAuthoring>
         {
             public override void Bake(LevelAuthoring authoring)
@@ -17,6 +17,9 @@ namespace Levels.Authorings
                 AddComponent(e, new LevelBuiltTag());
 
                 SetComponentEnabled<LevelBuiltTag>(e, false);
+
+                if (authoring.procedurallyGeneratedLevel)
+                    AddComponent(e, new BuildableLevelTag());
             }
         }
     }

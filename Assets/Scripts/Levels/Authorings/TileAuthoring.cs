@@ -1,7 +1,6 @@
 ﻿using Levels.Components;
 using UnityEngine;
 using Unity.Entities;
-using Player.Components;
 
 namespace Levels.Authorings
 {

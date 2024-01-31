@@ -1,9 +1,6 @@
-﻿using System;
-using Levels.Components;
+﻿using Levels.Components;
 using UnityEngine;
 using Unity.Entities;
-using Player.Components;
-using UnityEngine.Serialization;
 
 namespace Levels.Authorings
 {

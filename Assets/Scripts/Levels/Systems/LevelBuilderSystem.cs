@@ -30,7 +30,10 @@ namespace Levels.Systems
             var lib = SystemAPI.GetSingletonBuffer<TileLibrary>();
             var cmdBuffer = new EntityCommandBuffer(Allocator.Persistent);
             
-            foreach (var (loadedLevel, entity) in SystemAPI.Query<LevelAspect>().WithDisabled<LevelBuiltTag>().WithEntityAccess())
+            foreach (var (loadedLevel, entity) in SystemAPI.Query<LevelAspect>()
+                         .WithDisabled<LevelBuiltTag>()
+                         .WithAll<BuildableLevelTag>()
+                         .WithEntityAccess())
             {
                 var levelData = loadedLevel.levelData.ValueRO;
                 var grassTile = lib[0].tile;
