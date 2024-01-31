@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   procedurallyGeneratedLevel: 1
-  levelAudioTrack: {fileID: 11400000, guid: cbcc52b6f31271f4ba2a1598e7c81487, type: 2}
+  levelAudioTrack: {fileID: 8300000, guid: 2912f1cc375dd814f97d873bef4463bf, type: 3}
 --- !u!4 &2074657055
 Transform:
   m_ObjectHideFlags: 0

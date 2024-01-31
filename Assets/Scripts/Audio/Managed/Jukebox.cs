@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Audio.Managed.Components;
+using Audio.Components;
 using DG.Tweening;
 using Unity.Burst;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Audio.Managed
@@ -10,34 +11,68 @@ namespace Audio.Managed
     [BurstCompile]
     public class Jukebox : MonoBehaviour
     {
+        private static Jukebox _instance;
+
+        private static Jukebox Instance
+        {
+            get
+            {
+                if (!_instance)
+                    _instance = FindFirstObjectByType<Jukebox>();
+
+                return _instance;
+            }
+        }
+
         public float trackChangeTime = 10f;
         
-        public List<MusicTrack> tracks = new List<MusicTrack>();
+        public List<AudioClip> tracks = new List<AudioClip>();
         
         // Audio management
         private AudioSource _playerA;
         private AudioSource _playerB;
-        private AudioSource _currentPlayer;
+        private AudioSource _currentPlayer; 
 
-        private MusicTrack _currentTrack;
-        private static MusicTrack _trackToPlay;
+        private EntityManager _entityManager;
+        private EntityQuery _entityQuery;
+        
+        private int _currentTrack;
         
         private void Awake()
         {
+            _instance = this;
+            
             var sources = GetComponents<AudioSource>();
             if (sources.Length < 2)
                 throw new Exception("Jukebox requires two audio sources on its object");
             
             _playerA = sources[0];
             _playerB = sources[1];
+            
+            _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            _entityQuery = _entityManager.CreateEntityQuery(new EntityQueryDesc
+            {
+                All = new ComponentType[]
+                {
+                    typeof(MusicData)
+                }
+            });
         }
 
-        private void _Play(MusicTrack track)
+        public static int RegisterClip(AudioClip clip)
         {
+            Instance.tracks.Add(clip);
+            return Instance.tracks.Count - 1;
+        }
+        
+        private void _Play(int track)
+        {
+            if (track == -1) return;
+            
             // Play other track (Cross-fade tracks)
             if (_currentPlayer == _playerA)
             {
-                _playerB.clip = track.clip;
+                _playerB.clip = tracks[track];
                 _playerB.Play();
                 
                 _playerA.DOFade(0, trackChangeTime).OnComplete(() =>
@@ -50,7 +85,7 @@ namespace Audio.Managed
             }
             else
             {
-                _playerA.clip = track.clip;
+                _playerA.clip = tracks[track];
                 _playerA.Play();
                 
                 _playerA.DOFade(1, trackChangeTime);
@@ -61,20 +96,23 @@ namespace Audio.Managed
                 
                 _currentPlayer = _playerA;
             }
-            
 
-            _currentTrack = _trackToPlay;
-        }
-        
-        public static void Play(MusicTrack track)
-        {
-            _trackToPlay = track;
+            _currentTrack = track;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            if (_currentTrack != _trackToPlay)
-                _Play(_trackToPlay);
+            // Get entity
+            var targetEntity = _entityQuery.GetSingletonEntity();
+
+            // Play music track ;)
+            if (_entityManager.HasComponent<MusicData>(targetEntity))
+            {
+                var data = _entityManager.GetComponentData<MusicData>(targetEntity);
+                
+                if(_currentTrack != data.currentBackgroundTrack)
+                    _Play(data.currentBackgroundTrack);
+            }
         }
     }
 }
