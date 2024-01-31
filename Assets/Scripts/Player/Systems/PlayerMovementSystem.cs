@@ -42,7 +42,6 @@ namespace Player.Systems
             foreach((PlayerAspect aspect, Entity e) in SystemAPI.Query<PlayerAspect>().WithEntityAccess())
             {
                 // Decode aspect information
-                var localTransform = aspect.localTransform;
                 var movement = aspect.movement;
                 var movementRO = aspect.movement.ValueRO;
                 var movementInfo = aspect.movementInformation.ValueRO;
@@ -51,6 +50,10 @@ namespace Player.Systems
                 if (onlySingleLevelFound)
                     movement.ValueRW.maxTilesToSide = levelData.levelHalfPlayableWidth;
 
+                // Update component information
+                SystemAPI.SetComponentEnabled<IsMoving>(e, movementInfo.isMoving);
+                SystemAPI.SetComponentEnabled<IsMovementComputing>(e, movementInfo.isComputing);
+                
                 if (movementInfo.isComputing) return;
 
                 if (!movementInfo.isAnimating)
