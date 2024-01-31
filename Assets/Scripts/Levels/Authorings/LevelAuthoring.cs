@@ -1,4 +1,6 @@
-﻿using Levels.Components;
+﻿using Audio.Managed;
+using Audio.Managed.Components;
+using Levels.Components;
 using UnityEngine;
 using Unity.Entities;
 
@@ -7,6 +9,7 @@ namespace Levels.Authorings
     public class LevelAuthoring : MonoBehaviour
     {
         public bool procedurallyGeneratedLevel = true;
+        public MusicTrack levelAudioTrack;
         
         private class Baker : Baker<LevelAuthoring>
         {
@@ -18,6 +21,11 @@ namespace Levels.Authorings
 
                 SetComponentEnabled<LevelBuiltTag>(e, false);
 
+                AddComponentObject(e, new LevelAudioTrack()
+                {
+                    track = authoring.levelAudioTrack
+                });
+                
                 if (authoring.procedurallyGeneratedLevel)
                     AddComponent(e, new BuildableLevelTag());
             }
