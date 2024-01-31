@@ -14,6 +14,9 @@ namespace Levels.Authorings
             {
                 var e = GetEntity(TransformUsageFlags.None);
                 AddComponent(e, new LevelTag());
+                AddComponent(e, new LevelBuiltTag());
+
+                SetComponentEnabled<LevelBuiltTag>(e, false);
             }
         }
     }
