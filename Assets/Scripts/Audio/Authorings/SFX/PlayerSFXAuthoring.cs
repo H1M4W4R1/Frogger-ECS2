@@ -8,6 +8,7 @@ namespace Audio.Authorings.SFX
         public AudioClip jumpSFX;
         protected override void _RegisterClips()
         {
+            ClearClips();
             AddClip(jumpSFX, PlayerSFX.JUMP); 
         }
 

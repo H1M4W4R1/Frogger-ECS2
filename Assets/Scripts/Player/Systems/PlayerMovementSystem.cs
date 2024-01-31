@@ -84,7 +84,7 @@ namespace Player.Systems
                     if (_jumpTimer <= 0f)
                     {
                         // BUGFIX: when timer lags under 0f position will be terribly calculated, fix that using precalculated target position
-                       // localTransform.ValueRW.Position = _startingPosition + _jumpVector;
+                        aspect.localTransform.ValueRW.Position = movementInfo.startingPosition + movementInfo.movementVectorNonNormalized;
 
                         aspect.movementInformation.ValueRW.isMoving = false;
                         aspect.movementInformation.ValueRW.isAnimating = false;

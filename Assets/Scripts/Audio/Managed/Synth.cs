@@ -23,14 +23,14 @@ namespace Audio.Managed
             get
             {
                 if (!_instance)
-                    _instance = FindFirstObjectByType<Synth>();
+                    _instance = FindFirstObjectByType<Synth>(FindObjectsInactive.Include);;
 
                 return _instance;
             }
         }
         #endregion 
 
-        [SerializeField] [ReadOnly] private readonly List<AudioClip> _sfxClips = new List<AudioClip>();
+        private readonly List<AudioClip> _sfxClips = new List<AudioClip>();
         private readonly List<AudioSource> _sources = new List<AudioSource>();
         private Queue<int> _audioSFXToPlay = new Queue<int>();
 
@@ -44,6 +44,8 @@ namespace Audio.Managed
 
         private void Awake()
         {
+            _instance = this;
+            
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             _entityQuery = _entityManager.CreateEntityQuery(new EntityQueryDesc
             {

@@ -27,6 +27,12 @@ namespace Audio.Authorings
 
         protected abstract void _RegisterClips();
 
+        protected void ClearClips()
+        {
+            _clips.Clear();
+            _nClip = 0;
+        }
+
         protected void RegisterClips<T>(DynamicBuffer<T> buffer) where T : unmanaged
         {
             buffer.Clear();

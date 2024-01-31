@@ -20,7 +20,7 @@ namespace Audio.Managed
             get
             {
                 if (!_instance)
-                    _instance = FindFirstObjectByType<Jukebox>();
+                    _instance = FindFirstObjectByType<Jukebox>(FindObjectsInactive.Include);
 
                 return _instance;
             }
