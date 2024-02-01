@@ -35,8 +35,8 @@ namespace Player.Systems.Jobs
             if (movementData.movementVectorNonNormalized is {x: 0, z: 0}) return;
 
             // Fixes dual-jump issue before vector is cleared
-            if (Math.Abs(movementData.startingPosition.x - movementData.lastJumpTarget.x) < 0.1f &&
-                Math.Abs(movementData.startingPosition.z - movementData.lastJumpTarget.z) < 0.1f) return;
+            if (Math.Abs(movementData.startingPosition.x - movementData.lastJumpTarget.x) < 0.5f &&
+                Math.Abs(movementData.startingPosition.z - movementData.lastJumpTarget.z) < 0.5f) return;
 
             // Fix tile jump normalization
             if (isPlatformJump == 0)
