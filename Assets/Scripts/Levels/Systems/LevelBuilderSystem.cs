@@ -17,7 +17,6 @@ namespace Levels.Systems
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<LevelTag>();
-            state.RequireForUpdate<LevelBuiltTag>();
             state.RequireForUpdate<LevelData>();
             state.RequireForUpdate<TileLibrary>();
             state.RequireForUpdate<RenderedLevelTile>();

@@ -5,9 +5,6 @@ namespace Levels.Components
     public struct LevelData : IComponentData
     {
         public float time;
-        
-        // Game speed (time multiplier to determine hardness)
-        public float threatSpeed;
 
         // Amount of tiles to render to side (eg. 16 tiles to side)
         public int levelHalfRenderedWidth;

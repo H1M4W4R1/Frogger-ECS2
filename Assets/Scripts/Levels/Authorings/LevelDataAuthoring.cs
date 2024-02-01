@@ -7,7 +7,6 @@ namespace Levels.Authorings
     public class LevelDataAuthoring : MonoBehaviour
     {
         public float timeUntilFailed;
-        public float threatSpeedMultiplier;
         public int halfPlayableWidth = 3;
         public int halfRenderedWidth = 16;
         
@@ -19,7 +18,6 @@ namespace Levels.Authorings
                 AddComponent(e, new LevelData()
                 {
                    time = authoring.timeUntilFailed,
-                   threatSpeed = authoring.threatSpeedMultiplier,
                    levelHalfPlayableWidth = authoring.halfPlayableWidth,
                    levelHalfRenderedWidth = authoring.halfRenderedWidth
                 });
