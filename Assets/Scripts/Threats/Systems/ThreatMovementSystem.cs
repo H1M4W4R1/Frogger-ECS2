@@ -1,5 +1,7 @@
 ﻿using Threats.Components;
+using Threats.Jobs;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -25,6 +27,12 @@ namespace Threats.Systems
                 var vData = localTransform.ValueRW.Position + tData.direction * tData.speed * SystemAPI.Time.DeltaTime;
                 localTransform.ValueRW.Position = vData;
             }
+
+            /*var job = AcquireNearestPlatformJob.Prepare();
+            job.Schedule(state.Dependency).Complete();
+            
+            // Dispose useless array
+            state.Dependency = job.Dispose(state.Dependency);*/
         }
     }
 }

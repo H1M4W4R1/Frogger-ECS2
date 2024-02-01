@@ -13,6 +13,12 @@ namespace Player.Systems.Jobs
     public partial struct ComputeJumpVectorJob : IJobEntity
     {
         [BurstCompile]
+        public static void Prepare(out ComputeJumpVectorJob job)
+        {
+            job = new ComputeJumpVectorJob();
+        }
+        
+        [BurstCompile]
         public void Execute(in LocalTransform localTransform, ref CurrentMovementData movementData,
             in PlayerInput input, in PlayerMovementSettings movementSettings)
         {

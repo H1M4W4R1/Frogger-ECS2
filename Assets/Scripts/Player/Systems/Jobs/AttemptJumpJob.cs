@@ -11,6 +11,15 @@ namespace Player.Systems.Jobs
     public partial struct AttemptJumpJob : IJobEntity
     {
         public byte foundTileId;
+
+        [BurstCompile]
+        public static void Prepare(out AttemptJumpJob job, byte tileId)
+        {
+            job = new AttemptJumpJob()
+            {
+                foundTileId = tileId
+            };
+        }
         
         [BurstCompile]
         public void Execute(in LocalTransform localTransform, ref CurrentMovementData movementData,

@@ -16,6 +16,8 @@ namespace Threats.Authorings
             public override void Bake(PlatformAuthoring authoring)
             {
                 var e = GetEntity(TransformUsageFlags.None);
+                AddComponent<IsPlatform>(e);
+                
                 AddComponent(e, new MovingThreat()
                 {
                     speed = authoring.speed,

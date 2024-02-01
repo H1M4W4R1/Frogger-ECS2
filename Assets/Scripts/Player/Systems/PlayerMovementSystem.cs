@@ -1,15 +1,11 @@
 using Audio.Components;
 using Audio.LowLevel;
-using Helpers;
 using Levels.Components;
-using LowLevel;
 using Player.Aspects;
 using Player.Components;
 using Player.Systems.Jobs;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
 
 namespace Player.Systems
 {
@@ -40,6 +36,8 @@ namespace Player.Systems
                 // Update component information
                 SystemAPI.SetComponentEnabled<HasMovementRequest>(e, movementInfo.isMovementRequested);
                 SystemAPI.SetComponentEnabled<IsMovementComputing>(e, movementInfo.isMovementComputing);
+                SystemAPI.SetComponentEnabled<IsStandingStill>(e, movementInfo is 
+                    {isMovementRequested: false, isMovementComputing: false, isJumpAnimating: false});
 
                 if (movementInfo.isMovementComputing) return;
 
@@ -48,31 +46,28 @@ namespace Player.Systems
                     if (!movementInfo.isMovementRequested)
                     {
                         // Compute vector
-                        new ComputeJumpVectorJob().Schedule(state.Dependency).Complete();
+                        ComputeJumpVectorJob.Prepare(out var cvJob);
+                        cvJob.Schedule(state.Dependency).Complete();
+                        
                         lPos += movementInfo.movementVectorNonNormalized;
 
                         // Skip empty vector
                         if (movementInfo.movementVectorNonNormalized is {x: 0, z: 0}) return;
 
                         // Check tiles
-                        var tileAccessJob = new AcquireTileAtPositionJob()
-                        {
-                            x = MathHelper.TileInt(lPos.x),
-                            z = MathHelper.TileInt(lPos.z),
-                            foundTileType = new NativeArray<byte>(1, Allocator.Domain)
-                        };
+                        AcquireTileAtPositionJob.Prepare(out var tileAccessJob, lPos.x, lPos.z);
                         tileAccessJob.Schedule(state.Dependency).Complete();
-
-                        var tileType = tileAccessJob.foundTileType[0];
+                        
+                        // Update tile data
+                        var tileType = tileAccessJob.GetFoundTileType();
                         SystemAPI.SetComponentEnabled<IsTargetTileNull>(e, tileType == (byte) LevelTiles.None);
-
+                        
                         // Attempt jumping onto tile
-                        new AttemptJumpJob() {foundTileId = tileType}
-                            .Schedule(state.Dependency)
-                            .Complete();
+                        AttemptJumpJob.Prepare(out var attemptJump, tileType);
+                        attemptJump.Schedule(state.Dependency).Complete();
 
                         // Free memory
-                        state.Dependency = tileAccessJob.foundTileType.Dispose(state.Dependency);
+                        state.Dependency = tileAccessJob.Dispose(state.Dependency);
                     }
                     else
                     {
@@ -80,7 +75,8 @@ namespace Player.Systems
                         aspect.movementInformation.ValueRW.isJumpAnimating = true;
 
                         // Handle player rotation during jump
-                        state.Dependency = new RotateFrogJob().Schedule(state.Dependency);
+                        RotateFrogJob.Prepare(out var rotateFrogJob);
+                        state.Dependency = rotateFrogJob.Schedule(state.Dependency);
 
                         // Play SFX
                         if (SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<SFXInfo> info))
@@ -89,11 +85,12 @@ namespace Player.Systems
                 }
                 else
                 {
-                    // Animate jump
+                    // Animate jump 
                     var dt = SystemAPI.Time.DeltaTime;
 
                     // Jump animation
-                    new AnimateFrogJumpJob() {jumpTimer = _jumpTimer}.Run();
+                    AnimateFrogJumpJob.Prepare(out var job, _jumpTimer);
+                    job.Run();
 
                     _jumpTimer -= dt;
 

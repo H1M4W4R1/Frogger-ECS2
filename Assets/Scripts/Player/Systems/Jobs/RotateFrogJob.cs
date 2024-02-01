@@ -12,6 +12,12 @@ namespace Player.Systems.Jobs
     public partial struct RotateFrogJob : IJobEntity
     {
         [BurstCompile]
+        public static void Prepare(out RotateFrogJob job)
+        {
+            job = new RotateFrogJob();
+        }
+        
+        [BurstCompile]
         public void Execute(in PlayerTag tag, ref LocalTransform localTransform, in CurrentMovementData currentMovementData,
             in PlayerMovementSettings movementSettingsSettings)
         {

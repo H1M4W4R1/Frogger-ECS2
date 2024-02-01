@@ -11,6 +11,15 @@ namespace Player.Systems.Jobs
         public float jumpTimer;
 
         [BurstCompile]
+        public static void Prepare(out AnimateFrogJumpJob job, float cTime)
+        {
+            job = new AnimateFrogJumpJob()
+            {
+                jumpTimer = cTime
+            };
+        }
+        
+        [BurstCompile]
         public void Execute(ref LocalTransform localTransform, in PlayerMovementSettings movementSettings,
             in CurrentMovementData movementData)
         {
