@@ -3,6 +3,7 @@ using Audio.Components;
 using Audio.LowLevel;
 using Helpers;
 using Levels.Components;
+using LowLevel;
 using Player.Aspects;
 using Player.Components;
 using Player.Systems.Jobs;
@@ -107,20 +108,32 @@ namespace Player.Systems
                                         nOffsetPos = offset.value;
                                     }
                                 }
-                                
-                                // Fix jump vector against platform position
-                                aspect.movementInformation.ValueRW.lastJumpTarget =
-                                    platformPosition + nOffsetPos;
-                                
-                                // Mark as player is on platform
-                                SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(nearestPlatformJob.platformEntity[0], true);
-                                
-                                // Attempt jumping onto platform
-                                AttemptJumpJob.Prepare(out var attemptJump, tileType, 1);
-                                attemptJump.Schedule(state.Dependency).Complete();
-                               
-                                SystemAPI.SetComponentEnabled<IsOnPlatform>(e, true);
 
+                                // Check if current offset is near frog jump, value equal to tile size is okay for nice UX
+                                if (nOffsetDistanceSquare < ConstConfig.TILE_SIZE)
+                                {
+                                    // Fix jump vector against platform position
+                                    aspect.movementInformation.ValueRW.lastJumpTarget =
+                                        platformPosition + nOffsetPos;
+
+                                    // Mark as player is on platform
+                                    SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(
+                                        nearestPlatformJob.platformEntity[0], true);
+
+                                    // Attempt jumping onto platform
+                                    AttemptJumpJob.Prepare(out var attemptJump, tileType, 1);
+                                    attemptJump.Schedule(state.Dependency).Complete();
+
+                                    SystemAPI.SetComponentEnabled<IsOnPlatform>(e, true);
+                                }
+                                else // Death jump
+                                {
+                                    // Regular death jump
+                                    AttemptJumpJob.Prepare(out var attemptJump, tileType, 0);
+                                    attemptJump.Schedule(state.Dependency).Complete();
+                                    SystemAPI.SetComponentEnabled<IsOnPlatform>(e, false);
+                                }
+                                
                                 // Clear job memory
                                 state.Dependency = nearestPlatformJob.Dispose(state.Dependency);
                             }
