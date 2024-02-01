@@ -15,19 +15,22 @@ namespace Player.Systems.Jobs
     [BurstCompile]
     public partial struct AcquireTileAtPositionJob : IJobEntity, INativeDisposable
     {
-        public NativeArray<byte> foundTileType;
+        public NativeArray<RenderedLevelTile> foundTile;
 
         public int x;
         public int z;
 
         [BurstCompile]
-        public byte GetFoundTileType() => foundTileType[0];
+        public byte GetFoundTileType() => foundTile[0].tileId;
+
+        [BurstCompile]
+        public bool IsKillTile() => foundTile[0].isKillTile;
         
-        [BurstCompile] 
+        [BurstCompile]
         public void Execute(in RenderedLevelTile tile)
         {
             if (tile.xPosition == x && tile.zPosition == z)
-                foundTileType[0] = tile.tileId;
+                foundTile[0] = tile;
         }
 
         [BurstCompile]
@@ -43,19 +46,19 @@ namespace Player.Systems.Jobs
             {
                 x = xValue,
                 z = zValue,
-                foundTileType = new NativeArray<byte>(1, Allocator.TempJob)
+                foundTile = new NativeArray<RenderedLevelTile>(1, Allocator.TempJob)
             };
         }
         
         public void Dispose()
         {
-            foundTileType.Dispose();
+            foundTile.Dispose();
         }
 
         [BurstCompile]
         public JobHandle Dispose(JobHandle inputDeps)
         {
-            return foundTileType.Dispose(inputDeps);
+            return foundTile.Dispose(inputDeps);
         }
     }
 }

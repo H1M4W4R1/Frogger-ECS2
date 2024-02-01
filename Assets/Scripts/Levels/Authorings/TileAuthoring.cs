@@ -21,7 +21,8 @@ namespace Levels.Authorings
                 });
                 AddComponent(e, new RenderedLevelTile
                 {
-                    tileId = 255
+                    tileId = 255,
+                    isKillTile = authoring.isKillTile
                 });
             }
         }

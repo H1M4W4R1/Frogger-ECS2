@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c61362852a41c8a8a8ebd70d1cef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 1
+  tileType: 2
   isKillTile: 0
 --- !u!65 &404416659
 BoxCollider:
@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c61362852a41c8a8a8ebd70d1cef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 1
+  tileType: 2
   isKillTile: 0
 --- !u!1 &1533407411
 GameObject:
@@ -534,7 +534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c61362852a41c8a8a8ebd70d1cef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 1
+  tileType: 2
   isKillTile: 0
 --- !u!65 &1533407413
 BoxCollider:
@@ -778,8 +778,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c61362852a41c8a8a8ebd70d1cef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 2
-  isKillTile: 0
+  tileType: 3
+  isKillTile: 1
 --- !u!65 &1680963146
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1022,8 +1022,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c61362852a41c8a8a8ebd70d1cef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 2
-  isKillTile: 0
+  tileType: 3
+  isKillTile: 1
 --- !u!65 &2010885210
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1308,8 +1308,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c61362852a41c8a8a8ebd70d1cef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 2
-  isKillTile: 0
+  tileType: 3
+  isKillTile: 1
 --- !u!4 &543450651820321376
 Transform:
   m_ObjectHideFlags: 0

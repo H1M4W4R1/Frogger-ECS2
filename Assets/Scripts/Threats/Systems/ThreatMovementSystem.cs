@@ -21,11 +21,13 @@ namespace Threats.Systems
         public void OnUpdate(ref SystemState state)
         {
             foreach (var (localTransform, threat) 
-                     in SystemAPI.Query<RefRW<LocalTransform>, RefRO<MovingThreat>>())
+                     in SystemAPI.Query<RefRW<LocalTransform>, RefRW<MovingThreat>>())
             {
                 var tData = threat.ValueRO;
                 var vData = localTransform.ValueRW.Position + tData.direction * tData.speed * SystemAPI.Time.DeltaTime;
                 localTransform.ValueRW.Position = vData;
+
+                threat.ValueRW.currentPosition = vData;
             }
 
             /*var job = AcquireNearestPlatformJob.Prepare();

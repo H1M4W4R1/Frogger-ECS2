@@ -8,6 +8,7 @@ namespace Player.Components
     {
         public float3 startingPosition;
         public float3 movementVectorNonNormalized;
+        public float3 lastJumpTarget;
         
         public JumpDirection direction;
         public bool isMovementRequested;

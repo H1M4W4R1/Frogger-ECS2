@@ -21,7 +21,8 @@ namespace Threats.Authorings
                 AddComponent(e, new MovingThreat()
                 {
                     speed = authoring.speed,
-                    direction = authoring.direction
+                    direction = authoring.direction,
+                    isNotNull = true
                 });
             }
         }

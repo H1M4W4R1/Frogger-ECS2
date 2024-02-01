@@ -16,6 +16,18 @@ namespace Threats.Jobs
         public NativeArray<float> nearestDistanceSquared;
         
         public float3 forPosition;
+
+        [BurstCompile]
+        public bool IsPlatformNull()
+        {
+            return !nearestPlatformInfo[0].isNotNull;
+        }
+
+        [BurstCompile]
+        public float3 GetPosition()
+        {
+            return nearestPlatformInfo[0].currentPosition;
+        }
         
         [BurstCompile]
         public void Execute(in LocalTransform localTransform, ref MovingThreat threatObj)
@@ -34,15 +46,16 @@ namespace Threats.Jobs
         }
  
         [BurstCompile]
-        public static void Prepare(out AcquireNearestPlatformJob job)
+        public static void Prepare(out AcquireNearestPlatformJob job, in float3 forPosition)
         {
             job = new AcquireNearestPlatformJob()
             {
-                nearestPlatformInfo = new NativeArray<MovingThreat>(1, Allocator.TempJob),
-                nearestDistanceSquared = new NativeArray<float>(1, Allocator.TempJob)
+                nearestPlatformInfo = new NativeArray<MovingThreat>(1, Allocator.Domain),
+                nearestDistanceSquared = new NativeArray<float>(1, Allocator.Domain)
                 {
                     [0] = 1e3f
-                }
+                },
+                forPosition = forPosition
             };
         }
 
@@ -60,5 +73,6 @@ namespace Threats.Jobs
 
             return inputDeps;
         }
+
     }
 }

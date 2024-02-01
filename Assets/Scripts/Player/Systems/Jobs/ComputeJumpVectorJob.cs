@@ -37,23 +37,23 @@ namespace Player.Systems.Jobs
             // Horizontal jumps
             if (input.axisInput.x < -ConstConfig.AXIS_DEADZONE)
             {
-                movementData.movementVectorNonNormalized.x -= movementSettings.jumpDistance;
+                movementData.movementVectorNonNormalized.x = -movementSettings.jumpDistance;
                 movementData.direction = JumpDirection.Left;
             }
             else if (input.axisInput.x > ConstConfig.AXIS_DEADZONE)
             {
-                movementData.movementVectorNonNormalized.x += movementSettings.jumpDistance;
+                movementData.movementVectorNonNormalized.x = movementSettings.jumpDistance;
                 movementData.direction = JumpDirection.Right;
             }
             // Vertical jumps
             else if (input.axisInput.y < -ConstConfig.AXIS_DEADZONE)
             {
-                movementData.movementVectorNonNormalized.z -= movementSettings.jumpDistance;
+                movementData.movementVectorNonNormalized.z = -movementSettings.jumpDistance;
                 movementData.direction = JumpDirection.Down;
             }
             else if (input.axisInput.y > ConstConfig.AXIS_DEADZONE)
             {
-                movementData.movementVectorNonNormalized.z += movementSettings.jumpDistance;
+                movementData.movementVectorNonNormalized.z = movementSettings.jumpDistance;
                 movementData.direction = JumpDirection.Up;
             }
 

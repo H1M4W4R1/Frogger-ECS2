@@ -1,11 +1,16 @@
+using System;
 using Audio.Components;
 using Audio.LowLevel;
+using Helpers;
 using Levels.Components;
 using Player.Aspects;
 using Player.Components;
 using Player.Systems.Jobs;
+using Threats.Jobs;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Mathematics;
+using UnityEngine;
 
 namespace Player.Systems
 {
@@ -31,7 +36,6 @@ namespace Player.Systems
                 // Decode aspect information
                 var movementRO = aspect.movement.ValueRO;
                 var movementInfo = aspect.movementInformation.ValueRO;
-                var lPos = aspect.localTransform.ValueRO.Position;
 
                 // Update component information
                 SystemAPI.SetComponentEnabled<HasMovementRequest>(e, movementInfo.isMovementRequested);
@@ -49,10 +53,10 @@ namespace Player.Systems
                         ComputeJumpVectorJob.Prepare(out var cvJob);
                         cvJob.Schedule(state.Dependency).Complete();
                         
-                        lPos += movementInfo.movementVectorNonNormalized;
-
-                        // Skip empty vector
+                        // Compute and indicate target position
+                        var lPos = movementInfo.startingPosition + movementInfo.movementVectorNonNormalized;
                         if (movementInfo.movementVectorNonNormalized is {x: 0, z: 0}) return;
+                        aspect.movementInformation.ValueRW.lastJumpTarget = lPos;
 
                         // Check tiles
                         AcquireTileAtPositionJob.Prepare(out var tileAccessJob, lPos.x, lPos.z);
@@ -62,15 +66,50 @@ namespace Player.Systems
                         var tileType = tileAccessJob.GetFoundTileType();
                         SystemAPI.SetComponentEnabled<IsTargetTileNull>(e, tileType == (byte) LevelTiles.None);
                         
-                        // Attempt jumping onto tile
-                        AttemptJumpJob.Prepare(out var attemptJump, tileType);
-                        attemptJump.Schedule(state.Dependency).Complete();
+                        // Check if isKillTile
+                        if (tileAccessJob.IsKillTile())
+                        {
+                            // Get nearby platform
+                            AcquireNearestPlatformJob.Prepare(out var nearestPlatformJob, lPos);
+                            nearestPlatformJob.Schedule(state.Dependency).Complete();
+
+                            // Jump to platform TODO: check distances against slots
+                            if (!nearestPlatformJob.IsPlatformNull())
+                            {
+                                // Get platform position
+                                var platformPosition = nearestPlatformJob.GetPosition();
+
+                                // Fix jump vector against platform position
+                                aspect.movementInformation.ValueRW.lastJumpTarget =
+                                    platformPosition + new float3(0, 0.5f, 0);
+                                
+                                // Attempt jumping onto platform
+                                AttemptJumpJob.Prepare(out var attemptJump, tileType, 1);
+                                attemptJump.Schedule(state.Dependency).Complete();
+                            }
+                            else
+                            { 
+                                // Regular death jump
+                                AttemptJumpJob.Prepare(out var attemptJump, tileType, 0);
+                                attemptJump.Schedule(state.Dependency).Complete();
+                            }
+                        }
+                        else
+                        {
+                            // Attempt jumping onto tile
+                            AttemptJumpJob.Prepare(out var attemptJump, tileType, 0);
+                            attemptJump.Schedule(state.Dependency).Complete();
+                        }
 
                         // Free memory
                         state.Dependency = tileAccessJob.Dispose(state.Dependency);
                     }
                     else
                     {
+                        // Recompute new jump vector to prevent issues
+                        aspect.movementInformation.ValueRW.movementVectorNonNormalized =
+                            movementInfo.lastJumpTarget - movementInfo.startingPosition;
+                        
                         _jumpTimer = movementRO.jumpDistance / movementRO.jumpSpeed;
                         aspect.movementInformation.ValueRW.isJumpAnimating = true;
 
@@ -90,7 +129,7 @@ namespace Player.Systems
 
                     // Jump animation
                     AnimateFrogJumpJob.Prepare(out var job, _jumpTimer);
-                    job.Run();
+                    job.Schedule(state.Dependency).Complete();
 
                     _jumpTimer -= dt;
 
