@@ -1,4 +1,5 @@
-﻿using Threats.Components;
+﻿using Player.Components;
+using Threats.Components;
 using Threats.Jobs;
 using Unity.Burst;
 using Unity.Collections;
@@ -13,6 +14,7 @@ namespace Threats.Systems
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<PlayerTag>();
             state.RequireForUpdate<LocalTransform>();
             state.RequireForUpdate<MovingThreat>();
         }
@@ -20,14 +22,33 @@ namespace Threats.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (localTransform, threat) 
-                     in SystemAPI.Query<RefRW<LocalTransform>, RefRW<MovingThreat>>())
+            foreach (var (localTransform, threat, e) 
+                     in SystemAPI.Query<RefRW<LocalTransform>, RefRW<MovingThreat>>().WithEntityAccess())
             {
                 var tData = threat.ValueRO;
                 var vData = localTransform.ValueRW.Position + tData.direction * tData.speed * SystemAPI.Time.DeltaTime;
-                localTransform.ValueRW.Position = vData;
+                var uMove = true;
 
-                threat.ValueRW.currentPosition = vData;
+                // If platform
+                if (SystemAPI.HasComponent<IsPlatform>(e))
+                {
+                    // With animating player then cancel move
+                    if (SystemAPI.IsComponentEnabled<IsPlayerOnPlatform>(e))
+                    {
+                        var player = SystemAPI.GetSingletonEntity<PlayerTag>();
+                        var playerMovementInfo = SystemAPI.GetComponent<CurrentMovementData>(player);
+
+                        // Stun platform if player is jumping onto it ;) [better UX]
+                        if (playerMovementInfo.isJumpAnimating || playerMovementInfo.isMovementComputing)
+                            uMove = false;
+                    }
+                }
+
+                if (uMove)
+                {
+                    localTransform.ValueRW.Position = vData;
+                    threat.ValueRW.currentPosition = vData;
+                }
             }
 
             /*var job = AcquireNearestPlatformJob.Prepare();

@@ -6,6 +6,7 @@ using Levels.Components;
 using Player.Aspects;
 using Player.Components;
 using Player.Systems.Jobs;
+using Threats.Components;
 using Threats.Jobs;
 using Unity.Burst;
 using Unity.Entities;
@@ -66,6 +67,13 @@ namespace Player.Systems
                         var tileType = tileAccessJob.GetFoundTileType();
                         SystemAPI.SetComponentEnabled<IsTargetTileNull>(e, tileType == (byte) LevelTiles.None);
                         
+                        // Player has jumped - remove platform assignments
+                        foreach (var (platform, e1) in SystemAPI.Query<MovingThreat>()
+                                     .WithAll<IsPlayerOnPlatform, IsPlatform>().WithEntityAccess())
+                        {
+                            SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(e1, false);
+                        }
+                        
                         // Check if isKillTile
                         if (tileAccessJob.IsKillTile())
                         {
@@ -73,25 +81,55 @@ namespace Player.Systems
                             AcquireNearestPlatformJob.Prepare(out var nearestPlatformJob, lPos);
                             nearestPlatformJob.Schedule(state.Dependency).Complete();
 
-                            // Jump to platform TODO: check distances against slots
+                            // Jump to platform
                             if (!nearestPlatformJob.IsPlatformNull())
                             {
                                 // Get platform position
                                 var platformPosition = nearestPlatformJob.GetPosition();
 
+                                // Get offsets at current platform
+                                var offsets =
+                                    SystemAPI.GetBuffer<PlatformOffsetsStore>(nearestPlatformJob.platformEntity[0]);
+                             
+                                // Get nearest offset
+                                var nOffsetPos = float3.zero;
+                                var nOffsetDistanceSquare = 10e3f;
+
+                                foreach (var offset in offsets)
+                                {
+                                    // Compute difference between platform offset and local position of player
+                                    var diff = platformPosition + offset.value - lPos;
+                                    var dist = diff.x * diff.x + diff.z * diff.z;
+
+                                    if (dist < nOffsetDistanceSquare)
+                                    {
+                                        nOffsetDistanceSquare = dist;
+                                        nOffsetPos = offset.value;
+                                    }
+                                }
+                                
                                 // Fix jump vector against platform position
                                 aspect.movementInformation.ValueRW.lastJumpTarget =
-                                    platformPosition + new float3(0, 0.5f, 0);
+                                    platformPosition + nOffsetPos;
+                                
+                                // Mark as player is on platform
+                                SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(nearestPlatformJob.platformEntity[0], true);
                                 
                                 // Attempt jumping onto platform
                                 AttemptJumpJob.Prepare(out var attemptJump, tileType, 1);
                                 attemptJump.Schedule(state.Dependency).Complete();
+                               
+                                SystemAPI.SetComponentEnabled<IsOnPlatform>(e, true);
+
+                                // Clear job memory
+                                state.Dependency = nearestPlatformJob.Dispose(state.Dependency);
                             }
                             else
                             { 
                                 // Regular death jump
                                 AttemptJumpJob.Prepare(out var attemptJump, tileType, 0);
                                 attemptJump.Schedule(state.Dependency).Complete();
+                                SystemAPI.SetComponentEnabled<IsOnPlatform>(e, false);
                             }
                         }
                         else
@@ -99,6 +137,7 @@ namespace Player.Systems
                             // Attempt jumping onto tile
                             AttemptJumpJob.Prepare(out var attemptJump, tileType, 0);
                             attemptJump.Schedule(state.Dependency).Complete();
+                            SystemAPI.SetComponentEnabled<IsOnPlatform>(e, false);
                         }
 
                         // Free memory

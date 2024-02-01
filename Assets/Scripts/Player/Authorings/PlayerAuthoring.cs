@@ -1,4 +1,6 @@
 ﻿using Player.Components;
+using Threats.Components;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -28,6 +30,9 @@ namespace Player.Authorings
                 AddComponent(e, new IsMovementComputing());
                 AddComponent(e, new HasMovementRequest());
                 
+                // Platform stick handling
+                AddComponent(e, new IsOnPlatform());
+                
                 // Movement System
                 AddComponent(e, new PlayerInput());
                 AddComponent(e, new PlayerMovementSettings
@@ -45,6 +50,7 @@ namespace Player.Authorings
                 SetComponentEnabled<IsStandingStill>(e, false);
                 SetComponentEnabled<IsMovementComputing>(e, false);
                 SetComponentEnabled<HasMovementRequest>(e, false);
+                SetComponentEnabled<IsOnPlatform>(e, false);
             }
         }
 

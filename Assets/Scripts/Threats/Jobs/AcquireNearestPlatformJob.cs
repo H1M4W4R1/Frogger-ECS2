@@ -14,7 +14,8 @@ namespace Threats.Jobs
     {
         public NativeArray<MovingThreat> nearestPlatformInfo;
         public NativeArray<float> nearestDistanceSquared;
-        
+        public NativeArray<Entity> platformEntity;
+
         public float3 forPosition;
 
         [BurstCompile]
@@ -30,7 +31,7 @@ namespace Threats.Jobs
         }
         
         [BurstCompile]
-        public void Execute(in LocalTransform localTransform, ref MovingThreat threatObj)
+        public void Execute(in Entity e, in LocalTransform localTransform, ref MovingThreat threatObj)
         {
             // Compute squared distance
             var platformPos = localTransform.Position;
@@ -42,6 +43,7 @@ namespace Threats.Jobs
             {
                 nearestDistanceSquared[0] = sqrDistance;
                 nearestPlatformInfo[0] = threatObj;
+                platformEntity[0] = e;
             }
         }
  
@@ -50,11 +52,12 @@ namespace Threats.Jobs
         {
             job = new AcquireNearestPlatformJob()
             {
-                nearestPlatformInfo = new NativeArray<MovingThreat>(1, Allocator.Domain),
-                nearestDistanceSquared = new NativeArray<float>(1, Allocator.Domain)
+                nearestPlatformInfo = new NativeArray<MovingThreat>(1, Allocator.TempJob),
+                nearestDistanceSquared = new NativeArray<float>(1, Allocator.TempJob)
                 {
                     [0] = 1e3f
                 },
+                platformEntity = new NativeArray<Entity>(1, Allocator.TempJob),
                 forPosition = forPosition
             };
         }
@@ -63,6 +66,7 @@ namespace Threats.Jobs
         {
             nearestDistanceSquared.Dispose();
             nearestPlatformInfo.Dispose();
+            platformEntity.Dispose();
         }
 
         [BurstCompile]
@@ -70,6 +74,7 @@ namespace Threats.Jobs
         {
             inputDeps = nearestDistanceSquared.Dispose(inputDeps);
             inputDeps = nearestPlatformInfo.Dispose(inputDeps);
+            inputDeps = platformEntity.Dispose(inputDeps);
 
             return inputDeps;
         }
