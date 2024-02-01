@@ -2,7 +2,7 @@
 
 namespace Player.Components
 {
-    public struct IsMoving : IComponentData, IEnableableComponent
+    public struct IsStandingStill : IComponentData, IEnableableComponent
     {
         
     }

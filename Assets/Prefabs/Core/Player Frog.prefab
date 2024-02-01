@@ -95,19 +95,19 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40eb650236e65f847a0ce487ef1b1a92,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7921501477432372552}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40eb650236e65f847a0ce487ef1b1a92,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 8032826288262671366}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40eb650236e65f847a0ce487ef1b1a92,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 764320309102322675}
+      addedObject: {fileID: 653541513098729804}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40eb650236e65f847a0ce487ef1b1a92,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 653541513098729804}
+      addedObject: {fileID: 995393936073282598}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40eb650236e65f847a0ce487ef1b1a92,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7256470007815821406}
   m_SourcePrefab: {fileID: 100100000, guid: 40eb650236e65f847a0ce487ef1b1a92, type: 3}
 --- !u!1 &4663564355499663847 stripped
 GameObject:
@@ -115,23 +115,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5510478240050191542}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7921501477432372552
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4663564355499663847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 675946141aa9ef14ba66e489de9c5959, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpDistance: 2
-  jumpHeight: 0.5
-  jumpSpeed: 9
-  maxTilesToSize: 3
-  rotatePlayerCharacter: 1
 --- !u!114 &8032826288262671366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,18 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 778e77392b2f7cd44b9cef72aeb79656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &764320309102322675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4663564355499663847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc6877f139b3754fb496691bda00b90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  jumpDistance: 2
+  jumpHeight: 0.5
+  jumpSpeed: 9
+  rotatePlayerCharacter: 1
 --- !u!114 &653541513098729804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,4 +144,199 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sfxClips:
-  - {fileID: 8300000, guid: 292cec2589dfad7419f4c92afade3255, type: 3}
+  - uniqueId: 10000
+    clip: {fileID: 8300000, guid: 292cec2589dfad7419f4c92afade3255, type: 3}
+--- !u!114 &995393936073282598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4663564355499663847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccea9ea98e38942e0b0938c27ed1903e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MotionType: 1
+  m_Smoothing: 0
+  m_Mass: 1
+  m_LinearDamping: 0.01
+  m_AngularDamping: 0.05
+  m_InitialLinearVelocity:
+    x: 0
+    y: 0
+    z: 0
+  m_InitialAngularVelocity:
+    x: 0
+    y: 0
+    z: 0
+  m_GravityFactor: 1
+  m_OverrideDefaultMassDistribution: 0
+  m_CenterOfMass:
+    x: 0
+    y: 0
+    z: 0
+  m_Orientation:
+    Value:
+      x: 0
+      y: 0
+      z: 0
+    RotationOrder: 4
+  m_InertiaTensor:
+    x: 0.4
+    y: 0.4
+    z: 0.4
+  m_WorldIndex: 0
+  m_CustomTags:
+    Tag00: 0
+    Tag01: 0
+    Tag02: 0
+    Tag03: 0
+    Tag04: 0
+    Tag05: 0
+    Tag06: 0
+    Tag07: 0
+--- !u!114 &7256470007815821406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4663564355499663847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b275e5f92732148048d7b77e264ac30e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShapeType: 2
+  m_PrimitiveCenter:
+    x: 0.125
+    y: 3.8437495
+    z: 0.5625005
+  m_PrimitiveSize:
+    x: 13
+    y: 13
+    z: 13
+  m_PrimitiveOrientation:
+    Value:
+      x: -0
+      y: 0
+      z: 0
+    RotationOrder: 4
+  m_Capsule:
+    Height: 13
+    Radius: 6.5
+    Axis: 2
+  m_Cylinder:
+    Height: 13
+    Radius: 6.5
+    Axis: 2
+  m_CylinderSideCount: 20
+  m_SphereRadius: 6.5
+  m_MinimumSkinnedVertexWeight: 0.1
+  m_ConvexHullGenerationParameters:
+    m_SimplificationTolerance: 0.195
+    m_BevelRadius: 0.05
+    m_MinimumAngle: 2.5000002
+  m_CustomMesh: {fileID: 0}
+  m_ForceUnique: 0
+  m_Material:
+    m_SupportsTemplate: 1
+    m_Template: {fileID: 0}
+    m_CollisionResponse:
+      m_Override: 0
+      m_Value: 3
+    m_Friction:
+      m_Override: 0
+      m_Value:
+        Value: 0.5
+        CombineMode: 0
+    m_Restitution:
+      m_Override: 0
+      m_Value:
+        Value: 0
+        CombineMode: 2
+    m_BelongsToCategories:
+      m_Override: 0
+      m_Value:
+        Category00: 1
+        Category01: 1
+        Category02: 1
+        Category03: 1
+        Category04: 1
+        Category05: 1
+        Category06: 1
+        Category07: 1
+        Category08: 1
+        Category09: 1
+        Category10: 1
+        Category11: 1
+        Category12: 1
+        Category13: 1
+        Category14: 1
+        Category15: 1
+        Category16: 1
+        Category17: 1
+        Category18: 1
+        Category19: 1
+        Category20: 1
+        Category21: 1
+        Category22: 1
+        Category23: 1
+        Category24: 1
+        Category25: 1
+        Category26: 1
+        Category27: 1
+        Category28: 1
+        Category29: 1
+        Category30: 1
+        Category31: 1
+    m_CollidesWithCategories:
+      m_Override: 0
+      m_Value:
+        Category00: 1
+        Category01: 1
+        Category02: 1
+        Category03: 1
+        Category04: 1
+        Category05: 1
+        Category06: 1
+        Category07: 1
+        Category08: 1
+        Category09: 1
+        Category10: 1
+        Category11: 1
+        Category12: 1
+        Category13: 1
+        Category14: 1
+        Category15: 1
+        Category16: 1
+        Category17: 1
+        Category18: 1
+        Category19: 1
+        Category20: 1
+        Category21: 1
+        Category22: 1
+        Category23: 1
+        Category24: 1
+        Category25: 1
+        Category26: 1
+        Category27: 1
+        Category28: 1
+        Category29: 1
+        Category30: 1
+        Category31: 1
+    m_CustomMaterialTags:
+      m_Override: 0
+      m_Value:
+        Tag00: 0
+        Tag01: 0
+        Tag02: 0
+        Tag03: 0
+        Tag04: 0
+        Tag05: 0
+        Tag06: 0
+        Tag07: 0
+    m_SerializedVersion: 1
+  m_SerializedVersion: 1

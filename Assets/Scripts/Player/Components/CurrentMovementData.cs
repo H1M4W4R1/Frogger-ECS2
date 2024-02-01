@@ -10,8 +10,8 @@ namespace Player.Components
         public float3 movementVectorNonNormalized;
         
         public JumpDirection direction;
-        public bool isMoving;
-        public bool isComputing;
-        public bool isAnimating;
+        public bool isMovementRequested;
+        public bool isMovementComputing;
+        public bool isJumpAnimating;
     }
 }

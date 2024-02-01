@@ -1,4 +1,5 @@
-﻿using Levels.Aspects;
+﻿using Helpers;
+using Levels.Aspects;
 using Levels.Components;
 using LowLevel;
 using Unity.Burst;
@@ -11,7 +12,7 @@ using LevelAspect = Levels.Aspects.LevelAspect;
 
 namespace Levels.Systems
 {
-    public partial struct LevelBuilderSystem : ISystem
+    public partial struct LevelTileComputationSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -28,8 +29,8 @@ namespace Levels.Systems
             foreach (var tile in SystemAPI.Query<TileAspect>())
             {
                 var pos = tile.localTransform.ValueRO.Position;
-                tile.render.ValueRW.xPosition = (int) pos.x;
-                tile.render.ValueRW.zPosition = (int) pos.z;
+                tile.render.ValueRW.xPosition = MathHelper.TileInt(pos.x);
+                tile.render.ValueRW.zPosition = MathHelper.TileInt(pos.z);
 
                 tile.render.ValueRW.tileId = tile.tile.ValueRO.tileType;
             }

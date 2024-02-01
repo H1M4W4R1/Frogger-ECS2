@@ -13,6 +13,7 @@
 
         internal const float AXIS_DEADZONE = 0.2f;
 
+        // Must be 2!
         internal const int TILE_SIZE = 2;
     }
 }

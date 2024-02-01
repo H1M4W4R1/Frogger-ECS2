@@ -2,6 +2,7 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -19,7 +20,6 @@ namespace Player.Systems.Jobs
         [BurstCompile]
         public void Execute(in RenderedLevelTile tile)
         {
-            
             if (tile.xPosition == x && tile.zPosition == z)
                 foundTileType[0] = tile.tileId;
         }

@@ -17,7 +17,7 @@ namespace Player.Systems.Jobs
             in PlayerInput input, in PlayerMovementSettings movementSettings)
         {
 
-            movementData.isComputing = true;
+            movementData.isMovementComputing = true;
 
             // Initalize jump vector
             movementData.movementVectorNonNormalized.x = 0;
@@ -51,7 +51,7 @@ namespace Player.Systems.Jobs
                 movementData.direction = JumpDirection.Up;
             }
 
-            movementData.isComputing = false;
+            movementData.isMovementComputing = false;
         }
     }
 }

@@ -3,6 +3,7 @@ using Player.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Player.Systems.Jobs
 {
@@ -16,7 +17,11 @@ namespace Player.Systems.Jobs
             in PlayerInput input, in PlayerMovementSettings movementSettings)
         {
             // Tile is null
-            if (foundTileId == (byte) LevelTiles.None) return;
+            if (foundTileId == (byte) LevelTiles.None)
+            {
+                
+                return;
+            }
             if (movementData.movementVectorNonNormalized is {x: 0, z: 0}) return;
             
             // TODO: Acquire nearest tile type, if is water / kill tile then acquire nearest platform
@@ -27,7 +32,7 @@ namespace Player.Systems.Jobs
             // TODO: If touches world edge, then wait for push-off and DIE
             // TODO: If not water/kill tile then gently jump to next tile
             
-            movementData.isMoving = true;
+            movementData.isMovementRequested = true;
         }
     }
 }
