@@ -2,7 +2,7 @@
 
 namespace Levels.Components
 {
-    public struct RenderedLevelTile : IBufferElementData
+    public struct RenderedLevelTile : IComponentData
     {
         public byte tileId;
         

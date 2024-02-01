@@ -1,4 +1,5 @@
-﻿using Levels.Components;
+﻿using Levels.Aspects;
+using Levels.Components;
 using LowLevel;
 using Unity.Burst;
 using Unity.Collections;
@@ -25,47 +26,14 @@ namespace Levels.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var lib = SystemAPI.GetSingletonBuffer<TileLibrary>();
-            var cmdBuffer = new EntityCommandBuffer(Allocator.Domain);
-            
-            foreach (var (loadedLevel, entity) in SystemAPI.Query<LevelAspect>()
-                         .WithDisabled<LevelBuiltTag>()
-                         .WithAll<BuildableLevelTag>()
-                         .WithEntityAccess())
+            foreach (var tile in SystemAPI.Query<TileAspect>())
             {
-                var levelData = loadedLevel.levelData.ValueRO;
-                var grassTile = lib[0].tile;
-                var renderedData = SystemAPI.GetBuffer<RenderedLevelTile>(entity);
+                var pos = tile.localTransform.ValueRO.Position;
+                tile.render.ValueRW.xPosition = (int) pos.x;
+                tile.render.ValueRW.zPosition = (int) pos.z;
 
-                // TODO: Load JSON and job-build the level
-                for (var x = -levelData.levelHalfRenderedWidth * ConstConfig.TILE_SIZE;
-                     x <= levelData.levelHalfRenderedWidth * ConstConfig.TILE_SIZE; 
-                     x += ConstConfig.TILE_SIZE)
-                {
-                    for(var z = 0; z <= 256; z += ConstConfig.TILE_SIZE)
-                    {
-                        var spawnedObject = cmdBuffer.Instantiate(grassTile);
-                        cmdBuffer.SetComponent(spawnedObject, new LocalTransform()
-                        {
-                            Position = new float3(x, 0, z),
-                            Rotation = quaternion.EulerXYZ(90 * Mathf.Deg2Rad, 0, 0),
-                            Scale = 2f
-                        });
-
-                        renderedData.Add(new RenderedLevelTile()
-                        {
-                            tileId = 0,
-                            xPosition = x,
-                            zPosition = z
-                        });
-                    }
-                }
-                
-                SystemAPI.SetComponentEnabled<LevelBuiltTag>(entity, true);
+                tile.render.ValueRW.tileId = tile.tile.ValueRO.tileType;
             }
-            
-            // Build level data
-            cmdBuffer.Playback(state.EntityManager);
         }
     }
 }

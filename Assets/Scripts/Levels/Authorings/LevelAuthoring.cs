@@ -18,9 +18,6 @@ namespace Levels.Authorings
                 
                 SetComponentEnabled<LevelBuiltTag>(e, false);
 
-                AddBuffer<RenderedLevelTile>(e);
-                
-                
                 if (authoring.procedurallyGeneratedLevel)
                     AddComponent(e, new BuildableLevelTag());
             }

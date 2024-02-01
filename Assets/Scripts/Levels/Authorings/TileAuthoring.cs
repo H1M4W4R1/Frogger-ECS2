@@ -19,6 +19,10 @@ namespace Levels.Authorings
                     tileType = (byte) authoring.tileType,
                     isKillTile = authoring.isKillTile
                 });
+                AddComponent(e, new RenderedLevelTile
+                {
+                    tileId = 255
+                });
             }
         }
 

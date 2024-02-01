@@ -5,7 +5,9 @@ using Player.Aspects;
 using Player.Components;
 using Player.Systems.Jobs;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
 
 namespace Player.Systems
 {
@@ -25,20 +27,13 @@ namespace Player.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            // Grab level width
-            var onlySingleLevelFound = SystemAPI.TryGetSingleton(out LevelData levelData);
-
             // Process movement
             foreach((PlayerAspect aspect, Entity e) in SystemAPI.Query<PlayerAspect>().WithEntityAccess())
             {
                 // Decode aspect information
-                var movement = aspect.movement;
                 var movementRO = aspect.movement.ValueRO;
                 var movementInfo = aspect.movementInformation.ValueRO;
-
-                // Automatically update level information
-                if (onlySingleLevelFound)
-                    movement.ValueRW.maxTilesToSide = levelData.levelHalfPlayableWidth;
+                var lPos = aspect.localTransform.ValueRO.Position;
 
                 // Update component information
                 SystemAPI.SetComponentEnabled<IsMoving>(e, movementInfo.isMoving);
@@ -50,7 +45,25 @@ namespace Player.Systems
                 {
                     if (!movementInfo.isMoving)
                     {
-                        new CheckForJumpAttemptJob().Schedule();
+                        // Compute vector
+                        new ComputeJumpVectorJob().Schedule(state.Dependency).Complete();
+                        lPos += movementInfo.movementVectorNonNormalized;
+                        
+                        // Skip empty vector
+                        if (movementInfo.movementVectorNonNormalized is {x: 0, z: 0}) return;
+           
+                        // Check tile
+                        var tileAccessJob = new AcquireTileAtPositionJob()
+                        {
+                            x = (int) lPos.x,
+                            z = (int) lPos.z,
+                            foundTileType = new NativeArray<byte>(1, Allocator.Domain)
+                        };
+                        tileAccessJob.Schedule(state.Dependency).Complete();
+              
+                        // Attempt jumping onto tile
+                        new AttemptJumpJob(){foundTileId = tileAccessJob.foundTileType[0]}.Schedule(state.Dependency).Complete();
+                        state.Dependency = tileAccessJob.foundTileType.Dispose(state.Dependency);
                     }
                     else
                     {
@@ -58,7 +71,7 @@ namespace Player.Systems
                         aspect.movementInformation.ValueRW.isAnimating = true;
 
                         // Handle player rotation during jump
-                        new RotateFrogJob().Schedule();
+                        state.Dependency = new RotateFrogJob().Schedule(state.Dependency);
 
                         // Play SFX
                         if (SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<SFXInfo> info))
