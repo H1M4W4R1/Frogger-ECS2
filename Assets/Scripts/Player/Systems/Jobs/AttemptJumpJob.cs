@@ -48,14 +48,6 @@ namespace Player.Systems.Jobs
                 );
             }
 
-            // TODO: Acquire nearest tile type, if is water / kill tile then acquire nearest platform
-            // TODO: If acquired object is platform then compute points for next meetTick, take jump time into account
-            // TODO: If platform points in next meetTick are OK then assume platform location and jump onto platform
-            // TODO: If platform moves out of your scope, then DIE
-            // TODO: If platform dives then DIE
-            // TODO: If touches world edge, then wait for push-off and DIE
-            // TODO: If not water/kill tile then gently jump to next tile
-            
             movementData.isMovementRequested = true;
         }
     }
