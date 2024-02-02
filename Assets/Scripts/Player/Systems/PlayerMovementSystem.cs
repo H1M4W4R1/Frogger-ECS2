@@ -75,6 +75,8 @@ namespace Player.Systems
                             SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(e1, false);
                         }
                         
+                        aspect.movementInformation.ValueRW.willBeDead = false;
+                        
                         // Check if isKillTile
                         if (tileAccessJob.IsKillTile())
                         {
@@ -132,6 +134,8 @@ namespace Player.Systems
                                     AttemptJumpJob.Prepare(out var attemptJump, tileType, 0);
                                     attemptJump.Schedule(state.Dependency).Complete();
                                     SystemAPI.SetComponentEnabled<IsOnPlatform>(e, false);
+                                    
+                                    aspect.movementInformation.ValueRW.willBeDead = true;
                                 }
                                 
                                 // Clear job memory
@@ -143,6 +147,8 @@ namespace Player.Systems
                                 AttemptJumpJob.Prepare(out var attemptJump, tileType, 0);
                                 attemptJump.Schedule(state.Dependency).Complete();
                                 SystemAPI.SetComponentEnabled<IsOnPlatform>(e, false);
+
+                                aspect.movementInformation.ValueRW.willBeDead = true;
                             }
                         }
                         else
@@ -193,6 +199,10 @@ namespace Player.Systems
 
                         aspect.movementInformation.ValueRW.isMovementRequested = false;
                         aspect.movementInformation.ValueRW.isJumpAnimating = false;
+
+                        // Kill player if will be dead after move
+                        if (aspect.movementInformation.ValueRO.willBeDead)
+                            SystemAPI.SetComponentEnabled<IsDead>(e, true);
                     }
                 }
 

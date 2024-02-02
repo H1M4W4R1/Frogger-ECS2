@@ -14,5 +14,6 @@ namespace Player.Components
         public bool isMovementRequested;
         public bool isMovementComputing;
         public bool isJumpAnimating;
+        public bool willBeDead; // Will player be dead after move
     }
 }

@@ -26,6 +26,7 @@ namespace Player.Authorings
                 AddComponent(e, new PlayerTag());
                 AddComponent<IsTargetTileNull>(e);
                 AddComponent<IsStandingStill>(e);
+                AddComponent<IsDead>(e);
                 
                 AddComponent(e, new IsMovementComputing());
                 AddComponent(e, new HasMovementRequest());
@@ -51,6 +52,7 @@ namespace Player.Authorings
                 SetComponentEnabled<IsMovementComputing>(e, false);
                 SetComponentEnabled<HasMovementRequest>(e, false);
                 SetComponentEnabled<IsOnPlatform>(e, false);
+                SetComponentEnabled<IsDead>(e, false);
             }
         }
 

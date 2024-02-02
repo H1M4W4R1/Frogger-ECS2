@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Levels.Components
 {
@@ -11,5 +12,8 @@ namespace Levels.Components
 
         // Amount of tiles player can move on (eg. 3 tiles to side)
         public int levelHalfPlayableWidth;
+
+        // Frog starting location (computed from start tile)
+        public float3 startingPosition;
     }
 }
