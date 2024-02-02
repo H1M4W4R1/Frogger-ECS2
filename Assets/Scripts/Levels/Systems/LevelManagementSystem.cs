@@ -24,9 +24,11 @@ namespace Levels.Systems
                     SystemAPI.TryGetSingleton<LevelData>(out var lData))
                 {
                     ResetPlayerPositionToStart.Prepare(out var job, lData);
-                    job.Schedule();
+                    job.Schedule(state.Dependency).Complete();
 
                     SystemAPI.SetComponentEnabled<IsDead>(e, false);
+
+                    job.Dispose();
                 }
             }
         }

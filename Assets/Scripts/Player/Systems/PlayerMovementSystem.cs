@@ -202,7 +202,13 @@ namespace Player.Systems
 
                         // Kill player if will be dead after move
                         if (aspect.movementInformation.ValueRO.willBeDead)
+                        {
                             SystemAPI.SetComponentEnabled<IsDead>(e, true);
+                            aspect.movementInformation.ValueRW.willBeDead = false;
+                            
+                            // Bugfix for quick direction change while frog is still performing death jump, do not touch.
+                            aspect.movementInformation.ValueRW.movementVectorNonNormalized = float3.zero;
+                        }
                     }
                 }
 
