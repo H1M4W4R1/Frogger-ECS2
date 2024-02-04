@@ -19,7 +19,6 @@ namespace Levels.Systems
         {
             state.RequireForUpdate<LevelTag>();
             state.RequireForUpdate<LevelData>();
-            state.RequireForUpdate<TileLibrary>();
             state.RequireForUpdate<Tile>();
         }
 

@@ -7,5 +7,7 @@
         AsphaltTile = 2,
         WaterTile = 3,
         LavaTile = 4,
+        
+        Void = 255
     }
 }

@@ -27,6 +27,9 @@ namespace Player.Systems.Jobs
         public bool IsKillTile() => foundTile[0].isKillTile;
         
         [BurstCompile]
+        public bool IsKillZone() => foundTile[0].isKillZone;
+        
+        [BurstCompile]
         public void Execute(in Tile tile)
         {
             if (tile.xPosition == x && tile.zPosition == z)
