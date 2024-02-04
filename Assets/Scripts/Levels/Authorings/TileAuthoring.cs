@@ -21,6 +21,13 @@ namespace Levels.Authorings
                     isKillTile = authoring.isKillTile,
                     isKillZone = authoring.isKillZone
                 });
+                
+                // Tags
+                AddComponent<IsKillTile>(e);
+                AddComponent<IsKillZone>(e);
+                
+                SetComponentEnabled<IsKillTile>(e, authoring.isKillTile);
+                SetComponentEnabled<IsKillZone>(e, authoring.isKillZone);
             }
         }
 
