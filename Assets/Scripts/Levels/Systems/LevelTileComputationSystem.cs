@@ -20,7 +20,7 @@ namespace Levels.Systems
             state.RequireForUpdate<LevelTag>();
             state.RequireForUpdate<LevelData>();
             state.RequireForUpdate<TileLibrary>();
-            state.RequireForUpdate<RenderedLevelTile>();
+            state.RequireForUpdate<Tile>();
         }
 
         [BurstCompile]
@@ -31,8 +31,6 @@ namespace Levels.Systems
                 var pos = tile.localTransform.ValueRO.Position;
                 tile.render.ValueRW.xPosition = MathHelper.TileInt(pos.x);
                 tile.render.ValueRW.zPosition = MathHelper.TileInt(pos.z);
-
-                tile.render.ValueRW.tileId = tile.tile.ValueRO.tileType;
             }
         }
     }

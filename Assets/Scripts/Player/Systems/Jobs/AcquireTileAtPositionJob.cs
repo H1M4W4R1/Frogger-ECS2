@@ -15,7 +15,7 @@ namespace Player.Systems.Jobs
     [BurstCompile]
     public partial struct AcquireTileAtPositionJob : IJobEntity, INativeDisposable
     {
-        public NativeArray<RenderedLevelTile> foundTile;
+        public NativeArray<Tile> foundTile;
 
         public int x;
         public int z;
@@ -27,7 +27,7 @@ namespace Player.Systems.Jobs
         public bool IsKillTile() => foundTile[0].isKillTile;
         
         [BurstCompile]
-        public void Execute(in RenderedLevelTile tile)
+        public void Execute(in Tile tile)
         {
             if (tile.xPosition == x && tile.zPosition == z)
                 foundTile[0] = tile;
@@ -46,7 +46,7 @@ namespace Player.Systems.Jobs
             {
                 x = xValue,
                 z = zValue,
-                foundTile = new NativeArray<RenderedLevelTile>(1, Allocator.TempJob)
+                foundTile = new NativeArray<Tile>(1, Allocator.TempJob)
             };
         }
         
