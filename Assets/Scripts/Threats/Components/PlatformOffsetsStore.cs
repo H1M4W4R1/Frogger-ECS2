@@ -6,5 +6,6 @@ namespace Threats.Components
     public struct PlatformOffsetsStore : IBufferElementData
     {
         public float3 value;
+        public bool isDeathStore;
     }
 }

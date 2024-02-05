@@ -97,6 +97,7 @@ namespace Player.Systems
                                 // Get nearest offset
                                 var nOffsetPos = float3.zero;
                                 var nOffsetDistanceSquare = 10e3f;
+                                var offsetDataRO = default(PlatformOffsetsStore);
 
                                 foreach (var offset in offsets)
                                 {
@@ -108,6 +109,7 @@ namespace Player.Systems
                                     {
                                         nOffsetDistanceSquare = dist;
                                         nOffsetPos = offset.value;
+                                        offsetDataRO = offset;
                                     }
                                 }
 
@@ -125,6 +127,10 @@ namespace Player.Systems
                                     // Attempt jumping onto platform
                                     AttemptJumpJob.Prepare(out var attemptJump, tileType, 1);
                                     attemptJump.Schedule(state.Dependency).Complete();
+                                    
+                                    // Check for death platforms (like gator jaws)
+                                    if (offsetDataRO.isDeathStore)
+                                        aspect.movementInformation.ValueRW.willBeDead = true;
 
                                     SystemAPI.SetComponentEnabled<IsOnPlatform>(e, true);
                                 }

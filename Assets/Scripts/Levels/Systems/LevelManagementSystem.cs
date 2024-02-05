@@ -29,6 +29,8 @@ namespace Levels.Systems
                     if(SystemAPI.Exists(pEntity))
                         SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(pEntity, false);
                     
+                    nearestPlatformJob.Dispose();
+                    
                     // Move player to start and make him alive
                     ResetPlayerPositionToStart.Prepare(out var job, lData);
                     job.Schedule(state.Dependency).Complete();
