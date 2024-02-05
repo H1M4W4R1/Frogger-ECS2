@@ -8,7 +8,6 @@ namespace Threats.Authorings
 {
     public class MovingThreatSpawnerAuthoring : MonoBehaviour
     {
-
         public float minDelay;
         public float maxDelay;
 

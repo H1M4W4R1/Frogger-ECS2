@@ -25,9 +25,7 @@ namespace Audio.Authorings
                     center = authoring.transform.position,
                     scale = authoring.scale
                 });
-                AddComponent<IsPlayerInsideVolume>(e);
-                SetComponentEnabled<IsPlayerInsideVolume>(e, false);
-                
+
                 // Register managed clips (it will be processed by system)
                 var clipsComponent = new AudioClips();
                 clipsComponent.clips.Add(authoring.clip);

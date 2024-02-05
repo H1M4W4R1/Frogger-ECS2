@@ -9,11 +9,6 @@ namespace Threats.Systems
     public partial struct PlayerPlatformStickSystem : ISystem
     {
         [BurstCompile]
-        public void OnCreate(ref SystemState state)
-        {
-        }
-
-        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             foreach (var lThreat in SystemAPI.Query<RefRO<MovingThreat>>().WithAll<IsPlatform, IsPlayerOnPlatform>())
