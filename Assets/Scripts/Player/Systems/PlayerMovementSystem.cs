@@ -197,23 +197,36 @@ namespace Player.Systems
 
                     _jumpTimer -= dt;
 
-                    if (_jumpTimer <= 0f)
+                    if (SystemAPI.IsComponentEnabled<IsDead>(e))
                     {
-                        // BUGFIX: when timer lags under 0f position will be terribly calculated, fix that using precalculated target position
-                        aspect.localTransform.ValueRW.Position =
-                            movementInfo.startingPosition + movementInfo.movementVectorNonNormalized;
-
+                        // Reset movement params
                         aspect.movementInformation.ValueRW.isMovementRequested = false;
                         aspect.movementInformation.ValueRW.isJumpAnimating = false;
+                        aspect.movementInformation.ValueRW.willBeDead = false;
+                        aspect.movementInformation.ValueRW.movementVectorNonNormalized = float3.zero;
 
-                        // Kill player if will be dead after move
-                        if (aspect.movementInformation.ValueRO.willBeDead)
+                        _jumpTimer = 0f;
+                    }
+                    else // If not dead then process
+                    {
+                        if (_jumpTimer <= 0f)
                         {
-                            SystemAPI.SetComponentEnabled<IsDead>(e, true);
-                            aspect.movementInformation.ValueRW.willBeDead = false;
+                            // BUGFIX: when timer lags under 0f position will be terribly calculated, fix that using precalculated target position
+                            aspect.localTransform.ValueRW.Position =
+                                movementInfo.startingPosition + movementInfo.movementVectorNonNormalized;
+
+                            aspect.movementInformation.ValueRW.isMovementRequested = false;
+                            aspect.movementInformation.ValueRW.isJumpAnimating = false;
+ 
+                            // Kill player if will be dead after move
+                            if (aspect.movementInformation.ValueRO.willBeDead)
+                            {
+                                SystemAPI.SetComponentEnabled<IsDead>(e, true);
+                                aspect.movementInformation.ValueRW.willBeDead = false;
                             
-                            // Bugfix for quick direction change while frog is still performing death jump, do not touch.
-                            aspect.movementInformation.ValueRW.movementVectorNonNormalized = float3.zero;
+                                // Bugfix for quick direction change while frog is still performing death jump, do not touch.
+                                aspect.movementInformation.ValueRW.movementVectorNonNormalized = float3.zero;
+                            }
                         }
                     }
                 }
