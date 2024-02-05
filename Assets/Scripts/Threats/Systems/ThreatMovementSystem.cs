@@ -22,13 +22,11 @@ namespace Threats.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (localTransform, threat, e) 
+            // Scan for platform movement (cancel if player is in jump)
+            var movePlatforms = true;
+            foreach (var (localTransform, threat, e)
                      in SystemAPI.Query<RefRW<LocalTransform>, RefRW<MovingThreat>>().WithEntityAccess())
             {
-                var tData = threat.ValueRO;
-                var vData = localTransform.ValueRW.Position + tData.direction * tData.speed * SystemAPI.Time.DeltaTime;
-                var uMove = true;
-
                 // If platform
                 if (SystemAPI.HasComponent<IsPlatform>(e))
                 {
@@ -40,11 +38,19 @@ namespace Threats.Systems
 
                         // Stun platform if player is jumping onto it ;) [better UX]
                         if (playerMovementInfo.isJumpAnimating || playerMovementInfo.isMovementComputing)
-                            uMove = false;
+                            movePlatforms = false;
                     }
                 }
-
-                if (uMove)
+            }
+                
+            // Try to move
+            foreach (var (localTransform, threat, e) 
+                     in SystemAPI.Query<RefRW<LocalTransform>, RefRW<MovingThreat>>().WithEntityAccess())
+            {
+                var tData = threat.ValueRO;
+                var vData = localTransform.ValueRW.Position + tData.direction * tData.speed * SystemAPI.Time.DeltaTime;
+      
+                if (movePlatforms)
                 {
                     localTransform.ValueRW.Position = vData;
                     threat.ValueRW.currentPosition = vData;

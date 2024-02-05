@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Management.Components;
 using UnityEngine;
 using Unity.Entities;
 using Player.Components;
