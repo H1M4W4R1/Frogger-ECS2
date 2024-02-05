@@ -14,6 +14,8 @@ namespace Audio.Authorings
                 var e = GetEntity(TransformUsageFlags.None);
 
                 AddBuffer<SFXInfo>(e);
+                AddBuffer<VolumetricSFXInfo>(e);
+                AddBuffer<PlayedVolumetricSFXInfo>(e);
                 AddComponent<BackgroundMusicInfo>(e);
 
             }

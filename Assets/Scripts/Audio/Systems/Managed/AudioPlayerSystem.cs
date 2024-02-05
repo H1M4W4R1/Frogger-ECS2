@@ -27,6 +27,45 @@ namespace Audio.Systems.Managed
                 
                 sfxClips.Clear();
             }
+
+            if (SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<VolumetricSFXInfo> volumetricSFXClips) &&
+                SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<PlayedVolumetricSFXInfo> playedVolumetricSFXClips))
+            {
+                foreach (var clip in volumetricSFXClips)
+                {
+                    // Check if clip is already played
+                    var alreadyPlayed = false;
+                    foreach (var playedClip in playedVolumetricSFXClips)
+                    {
+                        if (playedClip.sfxClip == clip.sfxClip)
+                        {
+                            alreadyPlayed = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!alreadyPlayed)
+                        Synth.PlayVolumetricSFX(clip.sfxClip);
+                }
+                
+                // Clear non-played clips
+                foreach (var clip in playedVolumetricSFXClips)
+                {
+                    // Check if clip is still playing
+                    var stillPlaying = false;
+                    foreach (var playedClip in volumetricSFXClips)
+                    {
+                        if (playedClip.sfxClip == clip.sfxClip)
+                        {
+                            stillPlaying = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!stillPlaying)
+                        Synth.StopVolumetricSFX(clip.sfxClip);
+                }
+            }
         }
     }
 }
