@@ -48,9 +48,10 @@ namespace Threats.Authorings
         private void OnDrawGizmosSelected()
         {
             var tPos = transform.position;
-            Gizmos.color = Color.green;
+            
             foreach (var oPos in offsets)
             {
+                Gizmos.color = oPos.killsPlayer ? Color.red : Color.green;    
                 Gizmos.DrawSphere(tPos + (Vector3) oPos.position, 0.1f);
             }
         }

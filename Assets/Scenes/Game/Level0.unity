@@ -137,15 +137,21 @@ MonoBehaviour:
     y: 0
     z: 0
   offsets:
-  - x: -2
-    y: 0.5
-    z: 0
-  - x: 0
-    y: 0.5
-    z: 0
-  - x: 2
-    y: 0.5
-    z: 0
+  - position:
+      x: -2
+      y: 0.5
+      z: 0
+    killsPlayer: 0
+  - position:
+      x: 0
+      y: 0.5
+      z: 0
+    killsPlayer: 0
+  - position:
+      x: 2
+      y: 0.5
+      z: 0
+    killsPlayer: 0
 --- !u!1 &2074657052
 GameObject:
   m_ObjectHideFlags: 0
