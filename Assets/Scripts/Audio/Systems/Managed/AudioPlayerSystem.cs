@@ -1,11 +1,14 @@
 ﻿using Audio.Components;
 using Audio.LowLevel;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace Audio.Systems.Managed
 {
     public partial class AudioPlayerSystem : SystemBase
     {
+        private NativeList<int> _nList = new NativeList<int>(Allocator.Domain);
+
         protected override void OnCreate()
         {
             RequireForUpdate<BackgroundMusicInfo>();
@@ -43,12 +46,21 @@ namespace Audio.Systems.Managed
                             break;
                         }
                     }
-                    
-                    if(!alreadyPlayed)
+
+                    // If clip is not yet played
+                    if (!alreadyPlayed)
+                    {
+                        // Play clip and register it
                         Synth.PlayVolumetricSFX(clip.sfxClip);
+                        playedVolumetricSFXClips.Add(new PlayedVolumetricSFXInfo()
+                        {
+                            sfxClip = clip.sfxClip
+                        });
+                    }
                 }
                 
                 // Clear non-played clips
+                var index = 0;
                 foreach (var clip in playedVolumetricSFXClips)
                 {
                     // Check if clip is still playing
@@ -61,10 +73,22 @@ namespace Audio.Systems.Managed
                             break;
                         }
                     }
-                    
-                    if(!stillPlaying)
+
+                    // Stop playing the clip
+                    if (!stillPlaying)
+                    {
                         Synth.StopVolumetricSFX(clip.sfxClip);
+                        _nList.Add(index);
+                    }
+
+                    index++;
                 }
+                
+                // Clear old clips from stash
+                foreach(var nIndex in _nList)
+                    playedVolumetricSFXClips.RemoveAt(nIndex);
+
+                _nList.Clear();
             }
         }
     }

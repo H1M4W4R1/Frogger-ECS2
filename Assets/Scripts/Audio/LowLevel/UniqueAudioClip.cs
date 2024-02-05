@@ -8,6 +8,8 @@
         MusicMenu = 100,
         
         // Player SFX
-        JumpSFX = 10000
+        JumpSFX = 10000,
+        
+        CarSFX = 20000
     }
 }
