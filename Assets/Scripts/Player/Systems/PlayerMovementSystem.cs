@@ -131,6 +131,10 @@ namespace Player.Systems
                                     // Check for death platforms (like gator jaws)
                                     if (offsetDataRO.isDeathStore)
                                         aspect.movementInformation.ValueRW.willBeDead = true;
+                                    
+                                    // Jumping onto underwater platforms is not a good idea.
+                                    if(SystemAPI.IsComponentEnabled<IsPlatformUnderwater>(nearestPlatformJob.platformEntity[0]))
+                                        aspect.movementInformation.ValueRW.willBeDead = true;
 
                                     SystemAPI.SetComponentEnabled<IsOnPlatform>(e, true);
                                 }

@@ -21,7 +21,7 @@ namespace Levels.Systems
                     SystemAPI.TryGetSingleton<LevelData>(out var lData))
                 {
                     // Remove nearest platform player handling state
-                    AcquireNearestPlatformJob.Prepare(out var nearestPlatformJob,
+                    /*AcquireNearestPlatformJob.Prepare(out var nearestPlatformJob,
                         player.localTransform.ValueRO.Position);
                     nearestPlatformJob.Schedule(state.Dependency).Complete();
 
@@ -29,7 +29,14 @@ namespace Levels.Systems
                     if(SystemAPI.Exists(pEntity))
                         SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(pEntity, false);
                     
-                    nearestPlatformJob.Dispose();
+                    nearestPlatformJob.Dispose();*/
+                    
+                    // Remove platform states
+                    foreach (var (platform, platformEntity) in SystemAPI.Query<MovingThreat>()
+                                 .WithAll<IsPlatform, IsPlayerOnPlatform>().WithEntityAccess())
+                    {
+                        SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(platformEntity, false);
+                    }
                     
                     // Move player to start and make him alive
                     ResetPlayerPositionToStart.Prepare(out var job, lData);
