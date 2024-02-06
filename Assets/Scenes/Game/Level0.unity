@@ -202,9 +202,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDelay: 3
   maxDelay: 4
-  lifetime: 15
+  lifetime: 50
   prefabs:
-  - {fileID: 3995092175817997177, guid: b67740ad74b65ed4fb3febe065002419, type: 3}
+  - {fileID: 6348718228353258148, guid: 16e390c91d4ff394c99aa625608e92f0, type: 3}
 --- !u!4 &774665820
 Transform:
   m_ObjectHideFlags: 0
