@@ -11,6 +11,7 @@ using Threats.Components;
 using Threats.Jobs;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -94,31 +95,20 @@ namespace Player.Systems
                                 var offsets =
                                     SystemAPI.GetBuffer<PlatformOffsetsStore>(nearestPlatformJob.platformEntity[0]);
                              
-                                // Get nearest offset
-                                var nOffsetPos = float3.zero;
-                                var nOffsetDistanceSquare = 10e3f;
-                                var offsetDataRO = default(PlatformOffsetsStore);
-
-                                foreach (var offset in offsets)
-                                {
-                                    // Compute difference between platform offset and local position of player
-                                    var diff = platformPosition + offset.value - lPos;
-                                    var dist = diff.x * diff.x + diff.z * diff.z;
-
-                                    if (dist < nOffsetDistanceSquare)
-                                    {
-                                        nOffsetDistanceSquare = dist;
-                                        nOffsetPos = offset.value;
-                                        offsetDataRO = offset;
-                                    }
-                                }
-
+                                // Acquire nearest offset data
+                                AcquireNearestPlatformOffset.Prepare(out var acquireNearestPlatformOffset, offsets, lPos, platformPosition);
+                                acquireNearestPlatformOffset.Run();
+                                var offsetDataRO = acquireNearestPlatformOffset.GetOffsetData();
+                                
+                                var diff = platformPosition + offsetDataRO.value - lPos;
+                                var dist = diff.x * diff.x + diff.z * diff.z;
+                                
                                 // Check if current offset is near frog jump, value equal to tile size is okay for nice UX
-                                if (nOffsetDistanceSquare < ConstConfig.TILE_SIZE)
+                                if (dist < ConstConfig.TILE_SIZE)
                                 {
                                     // Fix jump vector against platform position
                                     aspect.movementInformation.ValueRW.lastJumpTarget =
-                                        platformPosition + nOffsetPos;
+                                        platformPosition + offsetDataRO.value;
 
                                     // Mark as player is on platform
                                     SystemAPI.SetComponentEnabled<IsPlayerOnPlatform>(
@@ -150,6 +140,7 @@ namespace Player.Systems
                                 
                                 // Clear job memory
                                 state.Dependency = nearestPlatformJob.Dispose(state.Dependency);
+                                state.Dependency = acquireNearestPlatformOffset.Dispose(state.Dependency);
                             }
                             else
                             { 
