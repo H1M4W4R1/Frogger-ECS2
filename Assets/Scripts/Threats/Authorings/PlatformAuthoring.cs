@@ -25,8 +25,7 @@ namespace Threats.Authorings
                 var e = GetEntity(TransformUsageFlags.None);
                 AddComponent<IsPlatform>(e);
                 AddComponent<IsPlayerOnPlatform>(e);
-                AddComponent<IsPlatformUnderwater>(e);
-                
+               
                 AddComponent(e, new MovingThreat()
                 {
                     speed = authoring.speed,
@@ -44,7 +43,6 @@ namespace Threats.Authorings
                     });
 
                 SetComponentEnabled<IsPlayerOnPlatform>(e, false);
-                SetComponentEnabled<IsPlatformUnderwater>(e, false);
             }
         } 
 
