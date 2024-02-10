@@ -1,7 +1,7 @@
 # About
 This project is an example of "Frogger-styled game" implemented using Unity ECS.
 
-Current state: W.I.P.
+Current state: ABANDONED (code is a piece of sh**)
 
 # Concept
 General concept is to create a collectible game where player moves in 2.5D space (world is rendered in 3 dimensions, however player moves only in 2). Player can die various ways - either by drowning in blue hydrogen monoxide acid, hit by car (and more ideas which will appear during development).
